@@ -6,10 +6,12 @@ var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
+let canvasName = "canvas";
 
 Start();
 
 function Start() {
+    document.getElementsByTagName("canvas")[0].setAttribute("id", canvasName);
     board = new Array();
     score = 0;
     pac_color = "yellow";
