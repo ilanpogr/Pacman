@@ -37,17 +37,21 @@ body {
 }
 
 #register:hover {
-    background: #7A0000;
-    color: white;
-    -webkit-transform: rotate(-1deg);
-    transform: rotate(-2deg);
-}
+     background: #7A0000;
+     color: white;
+     -webkit-transform: rotate(-1deg);
+     transform: rotate(-2deg);
+ }
 
 #login:hover {
     background: #7A0000;
     color: white;
     -webkit-transform: rotate(-2deg);
     transform: rotate(-2deg);
+}
+
+#register:active, #login:active {
+    background: #450000;
 }
 
 #left {
@@ -107,8 +111,8 @@ body {
 #menu_title {
     position: absolute;
     margin: auto;
-    top: -90px;
-    left: 440px;
+    top: -5%;
+    left: 35%;
     /*right: 0;*/
     /*min-width:100%;*/
     /*z-index: 9999;*/
@@ -129,4 +133,102 @@ body {
     top: -140px;
     z-index: 40;
     right: -60px;
+}
+
+/*REGISTER & LOGIN FORM*/
+.form-container {
+    padding-top: 2%;
+    padding-bottom: 2%;
+    padding-right: 6%;
+    padding-left: 2%;
+    background: #ffffff;
+    border: 9px solid #bdbdbd;
+    max-width: 520px;
+    margin: auto;
+}
+
+#login_form {
+    margin-top: 5%;
+}
+
+input.form-input{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 2px solid #888888;
+    border-radius: 6px;
+}
+input.form-input:focus{
+    border: 3px solid #555;
+}
+
+.form-button {
+    margin-top: 4%;
+    margin-left: 4%;
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #2E8B57;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 28px;
+    padding: 20px;
+    width: 100%;
+    transition: all 0.5s;
+    cursor: pointer;
+    /*margin: 5px;*/
+}
+
+.form-button span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.form-button span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.form-button:hover span {
+    padding-right: 25px;
+}
+
+.form-button:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+.cancel {
+    margin-top: 4%;
+    margin-left: 25%;
+    display: block;
+    border-radius: 4px;
+    background-color: #8b3f34;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 15px;
+    padding: 20px;
+    width: 60%;
+    cursor: pointer;
+}
+
+.cancel:active {
+    background-color: #542520;
+}
+
+.error{
+    display: none;
+    margin-left: 10px;
+}
+
+.error_show{
+    color: red;
+    margin-left: 10px;
 }

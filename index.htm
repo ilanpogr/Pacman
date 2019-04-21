@@ -1,48 +1,97 @@
 <!DOCTYPE html>
-<html>
 
+<html>
 <head>
     <title>Pac-man Ultimate 2.0</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="js/content_controller.js" type="text/javascript"></script>
+    <script src="js/users.js" type="text/javascript"></script>
+    <script src="js/game.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <!--<script src="js/game.js" type="text/javascript"></script>-->
+
+    <!--Minimal Notification Popup In Pure JavaScript-->
+    <link rel="stylesheet" href="js/styled-notifications-master/dist/notifications.css">
+    <script src="js/styled-notifications-master/dist/notifications.js"></script>
 </head>
 
 <body>
-<!--SCORE:-->
-<!--<input id="lblScore" type="text"/>-->
-<!--<br/>-->
-<!--TIME:-->
-<!--<input id="lblTime" type="text"/>-->
-<!--<br/>-->
-
-<!--<canvas id="canvas" height="600" width="600"></canvas>-->
 
 <!--MENU SIDE BAR-->
-    <div id="sidebar">
-        <a href="#" class="welcome">Welcome</a>
-        <a href="#" id="login_menu" class="login">Login</a>
-        <a href="#" class="register">Register</a>
-        <a href="#" class="settings">Settings</a>
-        <a href="#" class="register">About</a>
-    </div>
+<div id="sidebar">
+    <a href="#" class="welcome_menu">Welcome</a>
+    <a href="#" id="login_menu" class="login">Login</a>
+    <a href="#" class="register_menu">Register</a>
+    <a href="#" class="settings_menu">Settings</a>
+    <a href="#" class="about_menu">About</a>
+</div>
+
+<!--TODO - fix game.. canvas not rendering-->
+<div id="game" style="display: none">
+    SCORE:
+    <input id="lblScore" type="text"/>
+    <br/>
+    TIME:
+    <input id="lblTime" type="text"/>
+    <br/>
+    <canvas id="canvas" height="600" width="600"></canvas>
+</div>
 
 <!--WELCOME SCREEN-->
 <div id="welcome">
     <div id="menu_title"><h1>PAC-MAN</h1></div>
     <div id="all">
         <div id="left"></div>
-        <div id="register"><p>REGISTER</p></div>
-        <div id="login"><p>LOGIN</p></div>
+        <!--<div id="register" onclick="display_register()"><p>REGISTER</p></div>-->
+        <div id="register" onclick="startGame(null)"><p>REGISTER</p></div>
+        <!--<div id="login" onclick="display_login()"><p>LOGIN</p></div>-->
+        <div id="login" onclick="startGame(null)"><p>LOGIN</p></div>
         <div id="right"></div>
 
         <div id="circle"></div>
     </div>
 </div>
 
-<!--LOGIN_SCREEN-->
+<!--LOGIN SCREEN-->
+<div id="login_form" class="form-container" style="display: none">
+    <form name="frm">
+        <label for="name_login">Username:</label>
+        <input id="name_login" class="form-input" name="name" required maxlength="50">
 
+        <label for="password_login">Password:</label>
+        <input id="password_login" class="form-input" type="password" name="password" required maxlength="50">
+
+        <button id="login_btn" class="form-button" type="button" onclick="login()"><span>Login</span>
+        </button>
+        <button class="cancel" onclick="display_welcome()">Cancel</button>
+    </form>
+</div>
+
+<!--REGISTER_SCREEN-->
+<div id="register_form" class="form-container" style="display: none">
+    <form name="frm">
+        <label for="name">Username:</label>
+        <input id="name" class="form-input" required maxlength="50">
+
+        <label for="password">Password:</label>
+        <input id="password" class="form-input" type="password" required maxlength="50">
+
+        <label for="firstName">First Name:</label>
+        <input id="firstName" class="form-input" required maxlength="25">
+
+        <label for="lastName">First Name:</label>
+        <input id="lastName" class="form-input" required maxlength="35">
+
+        <label for="email">Email Address:</label>
+        <input id="email" class="form-input" required maxlength="50">
+
+        <!--TODO - FIX MAX AND MIN DATE!!-->
+        <label for="date">Birth Date:</label>
+        <input id="date" class="form-input" name="date" type="date" min='1899-01-01' max='2000-13-13'>
+
+        <button id="register_btn" class="form-button" type="button"><span>Register</span></button>
+        <button class="cancel" onclick="display_welcome()">Cancel</button>
+    </form>
+</div>
 
 <!--<script src="js/game.js" type="text/javascript"></script>-->
 </body>
