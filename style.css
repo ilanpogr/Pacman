@@ -113,7 +113,7 @@ body {
     margin: auto;
     top: -5%;
     left: 35%;
-    /*right: 0;*/
+    /*right: -55%;*/
     /*min-width:100%;*/
     /*z-index: 9999;*/
     font-family: shadows into light;
@@ -132,7 +132,7 @@ body {
     position: absolute;
     top: -140px;
     z-index: 40;
-    right: -60px;
+    right: -75px;
 }
 
 /*REGISTER & LOGIN FORM*/
