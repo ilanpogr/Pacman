@@ -7,6 +7,9 @@ var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
+var loaded = false;
+
+window.addEventListener("keydown", UpdatePosition, false);
 
 function startGame(user) {
     display_game();

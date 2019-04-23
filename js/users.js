@@ -6,6 +6,28 @@ var passwords = [
     "a"
 ];
 
+var emails = [
+    "ilanpogreb01@gmail.com"
+];
+
+function emailExist(sEmail) {
+    for (let i = 0; i < emails.length; i++) {
+        if (emails[i].localeCompare(sEmail) === 0) {
+            return true
+        }
+    }
+    return false;
+}
+
+function userExist(sName) {
+    for (let i = 0; i < usernames.length; i++) {
+        if (usernames[i].localeCompare(sName) === 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // REGISTER USER
 $(document).ready(function (e) {
     $('#register_btn').click(function () {
@@ -26,13 +48,17 @@ $(document).ready(function (e) {
             alert('Your password has to be at least 8 characters long,\n and contain at least one digit and one letter ');
         } else if (!validateEmail(sEmail)) {
             alert('Invalid Email Address');
+        } else if (userExist(sName)) {
+            alert('This Username already registered');
+        } else if (emailExist(sEmail)) {
+            alert('This Email already registered');
         } else {
             flag = false;
         }
         if (flag) {
             e.preventDefault();
         } else {
-            addUser(sName, sPass);
+            addUser(sName, sPass, sEmail);
             const myNotification = window.createNotification({
                 theme: 'success',
                 closeOnClick: true,
@@ -49,13 +75,15 @@ $(document).ready(function (e) {
             display_welcome();
         }
     });
-});
+})
+;
 
-function addUser(user, pass) {
+function addUser(user, pass, email) {
     // var user = $('#name').val();
     // var pass = $('#password').val();
     usernames.push(user.toString());
     passwords.push(pass.toString());
+    emails.push(email.toString());
 }
 
 function login() {
