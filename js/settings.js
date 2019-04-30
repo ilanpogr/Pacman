@@ -12,11 +12,21 @@ var color_15 = document.getElementById("points15").value;
 var color_25 = document.getElementById("points25").value;
 
 
-function setButton() {
+function setButton(keycode) {
     document.getElementById('key' + action).innerHTML = keyValue;
     document.getElementById('key' + action).style.backgroundColor = "#4CAF50";
     document.getElementById('key' + action).style.boxShadow = "0 9px #999";
     document.getElementById('key' + action).style.transform = null;
+
+    if (action === 'Up') {
+        keyUp = keycode;
+    } else if (action === 'Down') {
+        keyDown = keycode;
+    } else if (action === 'Left') {
+        keyLeft = keycode;
+    } else if (action === 'Right') {
+        keyRight = keycode;
+    }
     action = null;
 }
 
@@ -32,23 +42,23 @@ function specialValue(keycode, event) {
         //     keyValue = "ENTER";
         //     break;
         case 16:
-            if (event.location === KeyboardEvent.DOM_KEY_LOCATION_LEFT){
+            if (event.location === KeyboardEvent.DOM_KEY_LOCATION_LEFT) {
                 keyValue = "L-SHIFT";
-            } else if (event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT){
+            } else if (event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
                 keyValue = "R-SHIFT";
             }
             break;
         case 17:
-            if (event.location === KeyboardEvent.DOM_KEY_LOCATION_LEFT){
+            if (event.location === KeyboardEvent.DOM_KEY_LOCATION_LEFT) {
                 keyValue = "L-CTRL";
-            } else if (event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT){
+            } else if (event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
                 keyValue = "R-CTRL";
             }
             break;
         case 18:
-            if (event.location === KeyboardEvent.DOM_KEY_LOCATION_LEFT){
+            if (event.location === KeyboardEvent.DOM_KEY_LOCATION_LEFT) {
                 keyValue = "L-ALT";
-            } else if (event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT){
+            } else if (event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
                 keyValue = "R-ALT";
             }
             break;
@@ -92,56 +102,45 @@ function specialValue(keycode, event) {
             keyValue = "DELETE";
             break;
     }
-    setButton();
+    setButton(keycode);
 }
 
 var action = null;
 var keyValue;
 
-document.addEventListener('keydown', function (event) {
-    if (action != null) {
-        var keycode = event.which || event.keyCode;
-        keyValue = String.fromCharCode(keycode);
-        if (keycode < 47)
-            specialValue(keycode, event);
-        else {
-            setButton();
-        }
-    }
-});
-
 function setKey(key) {
-    document.getElementById('key'+key).style["background-color"] = "#3e8e41";
-    document.getElementById('key'+key).style["box-shadow"] = "0 5px #666";
-    document.getElementById('key'+key).style["transform"] = "translateY(4px)";
+    document.getElementById('key' + key).style["background-color"] = "#3e8e41";
+    document.getElementById('key' + key).style["box-shadow"] = "0 5px #666";
+    document.getElementById('key' + key).style["transform"] = "translateY(4px)";
     action = key;
 }
 
-function numOfBallsCheck(){
+function numOfBallsCheck() {
     var x = document.getElementById("num_balls").value;
-    if (x < 50){
+    if (x < 50) {
         document.getElementById("num_balls").value = 50;
-    } else if (x > 90){
+    } else if (x > 90) {
         document.getElementById("num_balls").value = 90;
     }
 }
-function timeCheck(){
+
+function timeCheck() {
     var x = document.getElementById("time_settings").value;
     if (x < 60) {
         document.getElementById("time_settings").value = 60;
     }
 }
 
-function monstersCheck(){
+function monstersCheck() {
     var x = document.getElementById("num_monsters").value;
-    if (x < 1){
+    if (x < 1) {
         document.getElementById("num_monsters").value = 1;
-    } else if (x > 3){
+    } else if (x > 3) {
         document.getElementById("num_monsters").value = 3;
     }
 }
 
-function random_settings(){
+function random_settings() {
     var min = 1;
     var max = 3;
     var randomnumber = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -178,4 +177,15 @@ function getRandomColor() {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+}
+
+function checkBeforeStart() {
+    if (keyRight !== keyLeft && keyRight !== keyUp && keyRight !== keyDown && keyLeft !== keyUp && keyLeft !== keyDown
+        && keyUp !== keyDown && keyUp !== 32 && keyDown !== 32 && keyLeft !== 32 && keyRight !== 32 &&
+        keyUp !== 13 && keyDown !== 13 && keyLeft !== 13 && keyRight !== 13) {
+        startGame();
+    } else {
+        alert('Keyboard setup must contain different keys and do not use ENTER or SPACE-BAR');
+    }
+
 }

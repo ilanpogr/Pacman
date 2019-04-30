@@ -13,7 +13,7 @@ window.addEventListener("keydown", UpdatePosition, false);
 
 var GameOn = false;
 
-function startGame(user) {
+function startGame() {
     display_game();
     start();
 }

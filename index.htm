@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 
 <!--TODO - CREATE FOOTER!-->
-
-<html xmlns:position="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Pac-man Ultimate 2.0</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -159,7 +157,7 @@
     </div>
     <div>
         <button id="random_gen" class="random_button" type="button" onclick="random_settings()">Random</button>
-        <button id="start" class="form-button" type="button" onclick="startGame()"><span>START</span></button>
+        <button id="start" class="form-button" type="button" onclick="checkBeforeStart()"><span>START</span></button>
     </div>
 </div>
 
@@ -189,6 +187,8 @@
     </div>
 </div>
 <script>
+    // about modal dialog handler
+
     var modal = document.getElementById('about_modal');
     // Get the button that opens the modal
     var btn = document.getElementById("about_btn");
@@ -212,14 +212,23 @@
     };
 </script>
 
-
-<!--prevent "enter" key hit in form document-->
 <script type="text/javascript">
+    // prevent "enter" key hit in form document
     window.addEventListener('keydown', function (e) {
         if (e.keyIdentifier == 'U+000A' || e.keyIdentifier == 'Enter' || e.keyCode == 13) {
             if (e.target.nodeName == 'INPUT') {
                 e.preventDefault();
                 return false;
+            }
+        }
+        // for cofigure game keys
+        if (action != null) {
+            var keycode = event.which || event.keyCode;
+            keyValue = String.fromCharCode(keycode);
+            if (keycode < 47)
+                specialValue(keycode, event);
+            else {
+                setButton(keycode);
             }
         }
     }, true);
