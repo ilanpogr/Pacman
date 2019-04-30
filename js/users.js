@@ -6,9 +6,7 @@ var passwords = [
     "a"
 ];
 
-var emails = [
-    "ilanpogreb01@gmail.com"
-];
+var emails = [];
 
 function emailExist(sEmail) {
     for (let i = 0; i < emails.length; i++) {
@@ -31,7 +29,6 @@ function userExist(sName) {
 // REGISTER USER
 $(document).ready(function (e) {
     $('#register_btn').click(function () {
-        // document.getElementById("register_btn").addEventListener("click", function (event) {
         var sName = $('#name').val();
         var sEmail = $('#email').val();
         var sFirst = $('#firstName').val();
@@ -93,7 +90,7 @@ function login() {
     for (let i = 0; i < usernames.length; i++) {
         if (usernames[i].localeCompare(user) === 0) {
             if (passwords[i].localeCompare(pass) === 0) {
-                startGame(user);
+                display_settings_menu();
                 found = true;
             }
             break;

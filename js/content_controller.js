@@ -2,10 +2,11 @@ function closeAllDisplay() {
     let welcome = document.getElementById("welcome");
     let register = document.getElementById("register_form");
     let login = document.getElementById("login_form");
-    let menu = document.getElementById("sidebar");
+    let settings = document.getElementById("settings");
     let game = document.getElementById("game");
 
     closeNav();
+    settings.style.display = "none";
     welcome.style.display = "none";
     register.style.display = "none";
     login.style.display = "none";

@@ -11,57 +11,61 @@ var loaded = false;
 
 window.addEventListener("keydown", UpdatePosition, false);
 
+var GameOn = false;
+
 function startGame(user) {
     display_game();
     start();
 }
 
 function start() {
-    canvas = document.getElementById('canvas');
-    context = canvas.getContext("2d");
-    board = new Array();
-    score = 0;
-    pac_color = "yellow";
-    var cnt = 100;
-    var food_remain = 50;
-    var pacman_remain = 1;
-    start_time = new Date();
-    for (var i = 0; i < 10; i++) {
-        board[i] = new Array();
-        //put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
-        for (var j = 0; j < 10; j++) {
-            if ((i === 3 && j === 3) || (i === 3 && j === 4) || (i === 3 && j === 5) || (i === 6 && j === 1) || (i === 6 && j === 2)) {
-                board[i][j] = 4;
-            } else {
-                var randomNum = Math.random();
-                if (randomNum <= 1.0 * food_remain / cnt) {
-                    food_remain--;
-                    board[i][j] = 1;
-                } else if (randomNum < 1.0 * (pacman_remain + food_remain) / cnt) {
-                    shape.i = i;
-                    shape.j = j;
-                    pacman_remain--;
-                    board[i][j] = 2;
+    if (GameOn) {
+        canvas = document.getElementById('canvas');
+        context = canvas.getContext("2d");
+        board = new Array();
+        score = 0;
+        pac_color = "yellow";
+        var cnt = 100;
+        var food_remain = 50;
+        var pacman_remain = 1;
+        start_time = new Date();
+        for (var i = 0; i < 10; i++) {
+            board[i] = new Array();
+            //put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
+            for (var j = 0; j < 10; j++) {
+                if ((i === 3 && j === 3) || (i === 3 && j === 4) || (i === 3 && j === 5) || (i === 6 && j === 1) || (i === 6 && j === 2)) {
+                    board[i][j] = 4;
                 } else {
-                    board[i][j] = 0;
+                    var randomNum = Math.random();
+                    if (randomNum <= 1.0 * food_remain / cnt) {
+                        food_remain--;
+                        board[i][j] = 1;
+                    } else if (randomNum < 1.0 * (pacman_remain + food_remain) / cnt) {
+                        shape.i = i;
+                        shape.j = j;
+                        pacman_remain--;
+                        board[i][j] = 2;
+                    } else {
+                        board[i][j] = 0;
+                    }
+                    cnt--;
                 }
-                cnt--;
             }
         }
+        while (food_remain > 0) {
+            var emptyCell = findRandomEmptyCell(board);
+            board[emptyCell[0]][emptyCell[1]] = 1;
+            food_remain--;
+        }
+        keysDown = {};
+        addEventListener("keydown", function (e) {
+            keysDown[e.code] = true;
+        }, false);
+        addEventListener("keyup", function (e) {
+            keysDown[e.code] = false;
+        }, false);
+        interval = setInterval(UpdatePosition, 250);
     }
-    while (food_remain > 0) {
-        var emptyCell = findRandomEmptyCell(board);
-        board[emptyCell[0]][emptyCell[1]] = 1;
-        food_remain--;
-    }
-    keysDown = {};
-    addEventListener("keydown", function (e) {
-        keysDown[e.code] = true;
-    }, false);
-    addEventListener("keyup", function (e) {
-        keysDown[e.code] = false;
-    }, false);
-    interval = setInterval(UpdatePosition, 250);
 }
 
 
@@ -130,41 +134,43 @@ function Draw() {
 }
 
 function UpdatePosition() {
-    board[shape.i][shape.j] = 0;
-    var x = GetKeyPressed();
-    if (x === 1) {
-        if (shape.j > 0 && board[shape.i][shape.j - 1] !== 4) {
-            shape.j--;
+    if (GameOn) {
+        board[shape.i][shape.j] = 0;
+        var x = GetKeyPressed();
+        if (x === 1) {
+            if (shape.j > 0 && board[shape.i][shape.j - 1] !== 4) {
+                shape.j--;
+            }
         }
-    }
-    if (x === 2) {
-        if (shape.j < 9 && board[shape.i][shape.j + 1] !== 4) {
-            shape.j++;
+        if (x === 2) {
+            if (shape.j < 9 && board[shape.i][shape.j + 1] !== 4) {
+                shape.j++;
+            }
         }
-    }
-    if (x === 3) {
-        if (shape.i > 0 && board[shape.i - 1][shape.j] !== 4) {
-            shape.i--;
+        if (x === 3) {
+            if (shape.i > 0 && board[shape.i - 1][shape.j] !== 4) {
+                shape.i--;
+            }
         }
-    }
-    if (x === 4) {
-        if (shape.i < 9 && board[shape.i + 1][shape.j] !== 4) {
-            shape.i++;
+        if (x === 4) {
+            if (shape.i < 9 && board[shape.i + 1][shape.j] !== 4) {
+                shape.i++;
+            }
         }
-    }
-    if (board[shape.i][shape.j] === 1) {
-        score++;
-    }
-    board[shape.i][shape.j] = 2;
-    var currentTime = new Date();
-    time_elapsed = (currentTime - start_time) / 1000;
-    if (score >= 20 && time_elapsed <= 10) {
-        pac_color = "green";
-    }
-    if (score === 50) {
-        window.clearInterval(interval);
-        window.alert("Game completed");
-    } else {
-        Draw();
+        if (board[shape.i][shape.j] === 1) {
+            score++;
+        }
+        board[shape.i][shape.j] = 2;
+        var currentTime = new Date();
+        time_elapsed = (currentTime - start_time) / 1000;
+        if (score >= 20 && time_elapsed <= 10) {
+            pac_color = "green";
+        }
+        if (score === 50) {
+            window.clearInterval(interval);
+            window.alert("Game completed");
+        } else {
+            Draw();
+        }
     }
 }
