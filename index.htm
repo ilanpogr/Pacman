@@ -2,7 +2,7 @@
 
 <!--TODO - CREATE FOOTER!-->
 
-<html xmlns:position="http://www.w3.org/1999/xhtml">
+<html xmlns:position="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Pac-man Ultimate 2.0</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -27,8 +27,8 @@
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="#" id="welcome_menu" onclick="display_welcome_menu()">Welcome</a>
     <a href="#" id="login_menu" onclick="display_login_menu()">Login</a>
-    <!--<a href="#" id="register_menu" onclick="display_register_menu()">Register</a>-->
-    <a href="#" id="settings_menu" onclick="display_settings_menu()">Settings</a>
+    <a href="#" id="register_menu" onclick="display_register_menu()">Register</a>
+    <!--<a href="#" id="settings_menu" onclick="display_settings_menu()">Settings</a>-->
     <a href="#" id="about_btn">About</a>
 </div>
 
@@ -47,15 +47,13 @@
 </div>
 
 <!--WELCOME SCREEN-->
-<!--<div id="welcome" style="display: none">-->
-<div id="welcome">
+<div id="welcome" style="display: none">
+    <!--<div id="welcome">-->
     <div id="all">
         <div id="left"></div>
         <div id="header"><h1>PAC-MAN</h1></div>
         <div id="register" onclick="display_register()"><p>REGISTER</p></div>
-        <!--<div id="register" onclick="startGame(null)"><p>REGISTER</p></div>-->
         <div id="login" onclick="display_login()"><p>LOGIN</p></div>
-        <!--<div id="login" onclick="startGame(null)"><p>LOGIN</p></div>-->
         <div id="right"></div>
 
         <div id="circle"></div>
@@ -105,7 +103,7 @@
 </div>
 
 <!--SETTINGS_SCREEN-->
-<div id="settings" style="display: none">
+<div id="settings" style="display:block">
     <h1 class="settings_header1">How would you like to move?</h1>
     <div class="grid-container">
         <div></div>
@@ -120,32 +118,44 @@
             <button id="keyDown" class="button_key" onclick="setKey('Down')">&darr;</button>
         </div>
         <div>
-            <button id="keyRight" class="button_key" type="button" onclick="setKey('Right')">&rarr;</button>
+            <button id="keyRight" class="button_key" onclick="setKey('Right')">&rarr;</button>
         </div>
     </div>
     <h1 class="settings_header2">Game Settings</h1>
     <div class="grid-container2">
         <div class="settings_content">
-            Number of balls:
+            <u>Number of balls:</u>
         </div>
         <div><label>
             <input id="num_balls" class="settings_input" type="number" name="count" placeholder="50" min="50" max="90"
                    onchange="numOfBallsCheck()">
         </label></div>
         <div class="settings_content">
-            Game duration (seconds):
+            <u>Game duration (seconds):</u>
         </div>
         <div><label>
             <input id="time_settings" class="settings_input" type="number" name="count" placeholder="60" min="60"
                    onchange="timeCheck()">
         </label></div>
         <div class="settings_content">
-            Number of monsters:
+            <u>Number of monsters:</u>
         </div>
         <div><label>
             <input id="num_monsters" class="settings_input" type="number" name="count" placeholder="3" min="1" max="3"
                    onchange="monstersCheck()">
         </label></div>
+    </div>
+    <div class="ball_types_header"><u>Choose color to each ball type:</u></div>
+    <div class="grid-container3">
+        <div class="color_picker_balls">5 Points</div>
+        <div class="color_picker_balls">15 Points</div>
+        <div class="color_picker_balls">25 Points</div>
+        <div><label><input class="color_picker_balls" id="points5" type="color" value="#6B8E23"></label>
+        </div>
+        <div><label><input class="color_picker_balls" id="points15" type="color" value="#8B008B"></label>
+        </div>
+        <div><label><input class="color_picker_balls" id="points25" type="color" value="#00FFFF"></label>
+        </div>
     </div>
     <div>
         <button id="random_gen" class="random_button" type="button" onclick="random_settings()">Random</button>

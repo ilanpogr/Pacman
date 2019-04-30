@@ -388,11 +388,22 @@ a.disabled {
 
 .grid-container2 {
     display: grid;
-    grid-template-columns: 150px auto;
+    grid-template-columns: 190px auto;
     grid-gap: 10px;
     /*background-color: #2196F3;*/
     padding: 10px;
     justify-content: center;
+}
+
+.grid-container3 {
+    margin-right: -1%;
+    display: grid;
+    grid-template-columns: 70px 70px 70px;
+    grid-gap: 10px;
+    /*background-color: #2196F3;*/
+    padding: 7px;
+    justify-content: center;
+    text-align: center;
 }
 
 .button_key {
@@ -440,30 +451,26 @@ a.disabled {
     padding: 20px;
     margin-left: 46%;
     cursor: pointer;
-    outline:none;
+    outline: none;
 }
 
 #random_gen:active {
     background: #245043;
-    outline:none;
+    outline: none;
 }
 
 #start {
     margin-top: 1%;
     margin-left: 40%;
     width: 20%;
-    outline:none;
+    outline: none;
 }
 
 #start:active {
     background: #450000;
-    outline:none;
+    outline: none;
 }
 
-/*.grid-container > div {*/
-/*!*background-color: rgba(255, 255, 255, 0.8);*!*/
-/*text-align: center;*/
-/*padding: 20px 0;*/
-/*font-size: 30px;*/
-/*}*/
-
+.ball_types_header {
+    text-align: center;
+}

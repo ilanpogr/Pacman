@@ -7,6 +7,10 @@ var num_time = 60;
 var num_balls = 50;
 var num_monster = 3;
 
+var color_5 = document.getElementById("points5").value;
+var color_15 = document.getElementById("points15").value;
+var color_25 = document.getElementById("points25").value;
+
 
 function setButton() {
     document.getElementById('key' + action).innerHTML = keyValue;
@@ -155,4 +159,23 @@ function random_settings(){
     randomnumber = Math.floor(Math.random() * (max - min + 1)) + min;
     document.getElementById("num_balls").value = randomnumber;
     num_balls = randomnumber;
+
+    var first = document.getElementById("points5");
+    var second = document.getElementById("points15");
+    var third = document.getElementById("points25");
+    first.value = getRandomColor();
+    second.value = getRandomColor();
+    third.value = getRandomColor();
+    color_5 = first.value;
+    color_15 = second.value;
+    color_25 = third.value;
+}
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }
