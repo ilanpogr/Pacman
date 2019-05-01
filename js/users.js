@@ -8,6 +8,9 @@ var passwords = [
 
 var emails = [];
 
+var current_user;
+var loggedIn = false;
+
 function emailExist(sEmail) {
     for (let i = 0; i < emails.length; i++) {
         if (emails[i].localeCompare(sEmail) === 0) {
@@ -83,15 +86,63 @@ function addUser(user, pass, email) {
     emails.push(email.toString());
 }
 
+function logout() {
+    document.getElementById("user").innerHTML = "";
+    document.getElementById("register").innerHTML = "<p>REGISTER</p>";
+    document.getElementById("login").innerHTML = "<p>LOGIN</p>";
+    document.getElementById("register").onclick = display_register;
+    document.getElementById("login").onclick = display_login;
+    loggedIn = false;
+    current_user = null;
+    display_welcome_menu();
+    const myNotification = window.createNotification({
+        theme: 'success',
+        closeOnClick: true,
+        onclick: false,
+        positionClass: 'nfc-top-right',
+        displayCloseButton: true,
+        showDuration: 3000
+
+    });
+    myNotification({
+        title: 'Logged out successfully',
+    });
+
+}
+
+function changedToLoggedIn() {
+    loggedIn = true;
+    document.getElementById("user").innerHTML = "Hi " + current_user + ".";
+    document.getElementById("register").innerHTML = "<p>LET'S PLAY!!!</p>";
+    document.getElementById("register").onclick = display_settings_menu;
+    document.getElementById("login").innerHTML = "<p>LOGOUT</p>";
+    document.getElementById("login").onclick = logout;
+
+}
+
 function login() {
     var user = $('#name_login').val();
     var pass = $('#password_login').val();
+    current_user = user;
     var found = false;
     for (let i = 0; i < usernames.length; i++) {
         if (usernames[i].localeCompare(user) === 0) {
             if (passwords[i].localeCompare(pass) === 0) {
-                display_settings_menu();
                 found = true;
+                const myNotification = window.createNotification({
+                    theme: 'success',
+                    closeOnClick: true,
+                    onclick: false,
+                    positionClass: 'nfc-top-right',
+                    displayCloseButton: true,
+                    showDuration: 3000
+
+                });
+                myNotification({
+                    title: 'Welcome ' + current_user + '!',
+                });
+                changedToLoggedIn();
+                display_settings_menu();
             }
             break;
         }

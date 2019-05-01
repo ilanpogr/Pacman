@@ -58,6 +58,7 @@ function display_game() {
 
 function openNav() {
     document.getElementById("mySidebar").style.width = "250px";
+    document.getElementById("user").style.width = "250px";
     // document.getElementById("main").style.marginLeft = "250px";
     document.getElementById("menu_btn").style.visibility = "hidden";
 }

@@ -292,9 +292,20 @@ canvas {
     background-color: #444;
 }
 
+#user {
+    font-family: shadows into light;
+    font-size: 1.5em;
+    font-weight: bold;
+    z-index: 9999;
+    /*position: absolute;*/
+    margin-left: 2%;
+    text-decoration-line: underline;
+}
+
 #main {
     transition: margin-left .5s;
     padding: 16px;
+    /*position: absolute;*/
 }
 
 a.disabled {
