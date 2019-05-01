@@ -92,6 +92,14 @@ function logout() {
     document.getElementById("login").innerHTML = "<p>LOGIN</p>";
     document.getElementById("register").onclick = display_register;
     document.getElementById("login").onclick = display_login;
+
+    document.getElementById("register_menu").onclick = display_register_menu;
+    document.getElementById("register_menu").innerHTML = "Register";
+    document.getElementById("login_menu").onclick = display_login_menu;
+    document.getElementById("login_menu").innerHTML = "Login";
+
+
+
     loggedIn = false;
     current_user = null;
     display_welcome_menu();
@@ -117,6 +125,13 @@ function changedToLoggedIn() {
     document.getElementById("register").onclick = display_settings_menu;
     document.getElementById("login").innerHTML = "<p>LOGOUT</p>";
     document.getElementById("login").onclick = logout;
+
+    document.getElementById("register_menu").onclick = display_settings_menu;
+    document.getElementById("register_menu").innerHTML = "GAME";
+    document.getElementById("login_menu").innerHTML = "Logout";
+    document.getElementById("login_menu").onclick = logout;
+
+
 
 }
 
