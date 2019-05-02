@@ -1,9 +1,9 @@
 var canvas;
 var context;
 var pacman = new Object();
-var binkey = new Object();
-var pinky = new Object();
-var inkey = new Object();
+var binky;
+var pinky;
+var inky;
 var board;
 var score;
 var pac_color;
@@ -15,7 +15,6 @@ var direction = 0;
 var food_put = 0;
 var interval_num = 0;
 var score2win = 0;
-
 window.addEventListener("keydown", UpdatePosition, false);
 
 var GameOn = false;
@@ -79,19 +78,31 @@ function start() {
         //     [4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4],
         //     [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
         // ];
+        direction = 0;
+        interval_num = 0;
+        score2win = 0;
         score = 0;
         pac_color = "yellow";
         pacman.i = 4;
         pacman.j = 9;
-        binkey.i = 10;
-        binkey.j = 9;
-        binkey.color = "red";
-        pinky.i = 10;
-        pinky.j = 8;
-        pinky.color = "pink";
-        inkey.i = 10;
-        inkey.j = 10;
-        inkey.color = "cyan";
+        binky = new Ghost(20, 1, 7, "red", 0, 0);
+        pinky = new Ghost(1, 1, 8, "pink", 0, 0);
+        inky = new Ghost(1, 17, 9, "cyan", 0, 1);
+        // binky.i = 20;
+        // binky.j = 9;
+        // binky.id = 7;
+        // binky.color = "red";
+        // binky.on = 0;
+        // pinky.i = 10;
+        // pinky.j = 8;
+        // pinky.id = 8;
+        // pinky.color = "pink";
+        // pinky.on = 0;
+        // inky.i = 10;
+        // inky.j = 10;
+        // inky.id = 9;
+        // inky.color = "cyan";
+        // inky.on = 0;
 
         var food_remain = num_balls;
         start_time = new Date();
@@ -136,12 +147,12 @@ function start() {
 
             food_remain--;
         }
-        if (num_monster < 3) {
-            board[10][10] = 4;
-        }
-        if (num_monster < 2) {
-            board[10][8] = 4;
-        }
+        // if (num_monster < 3) {
+        //     board[10][10] = 4;
+        // }
+        // if (num_monster < 2) {
+        //     board[10][8] = 4;
+        // }
         keysDown = {};
         addEventListener("keydown", function (e) {
             keysDown[e.code] = true;
@@ -153,7 +164,6 @@ function start() {
     }
 }
 
-
 function findRandomEmptyCell(board) {
     var i = Math.floor((Math.random() * 21) + 1);
     var j = Math.floor((Math.random() * 18) + 1);
@@ -163,6 +173,7 @@ function findRandomEmptyCell(board) {
     }
     return [i, j];
 }
+
 
 /**
  * @return {number}
@@ -231,7 +242,7 @@ function Draw() {
 
             //Pacman
             if (board[j][i] === 2) {
-                context.arc(center.x, center.y, 15, (direction + (0.25-(0.25/(0.25+interval_num%3)))) * Math.PI , (direction + 1.8 ) * Math.PI); // half circle
+                context.arc(center.x, center.y, 15, (direction + (0.25 - (0.25 / (0.25 + interval_num % 3)))) * Math.PI, (direction + 1.8) * Math.PI); // half circle
                 context.lineTo(center.x, center.y);
                 context.fillStyle = pac_color; //color
                 context.fill();
@@ -257,7 +268,7 @@ function Draw() {
 
             //Binkey
             else if (board[j][i] === 7) {
-                drawGhost(binkey);
+                drawGhost(binky);
             }
 
             //Pinky
@@ -267,7 +278,7 @@ function Draw() {
 
             //Binkey
             else if (board[j][i] === 9) {
-                drawGhost(inkey);
+                drawGhost(inky);
             }
 
             // Food
@@ -307,10 +318,144 @@ function Draw() {
 
 }
 
+
+function isValidMove(direction, ghost) {
+    if (direction === 1 && ghost.i < 21 && board[ghost.i + 1][ghost.j] !== 4) {
+        return true;
+    }
+    if (direction === 0 && ghost.j < 18 && board[ghost.i][ghost.j + 1] !== 4) {
+        return true;
+    }
+    if (direction === 3 && ghost.i > 0 && board[ghost.i - 1][ghost.j] !== 4) {
+        return true;
+    }
+    if (direction === 2 && ghost.i > 0 && board[ghost.i][ghost.j - 1] !== 4) {
+        return true;
+    }
+    return false;
+}
+
+function argMax(arg1, val1, arg2, val2) {
+    if (val1 >= val2) return arg1;
+    return arg2;
+}
+
+function argMin(arg1, val1, arg2, val2) {
+    if (val1 <= val2) return arg1;
+    return arg2;
+}
+
+/**
+ * @return {number}
+ */
+function GetNextMove(ghost) {
+    let shorter_horizontal_arg = argMax(0, pacman.i, 2, ghost.i);
+    let shorter_horizontal_val = Math.min(Math.abs(pacman.i - ghost.i));
+    let shorter_vertical_arg = argMax(1, pacman.j, 3, ghost.j);
+    let shorter_vertical_val = Math.min(Math.abs(pacman.j - ghost.j));
+    let res = argMin(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
+    if (!isValidMove(res,ghost))
+        res = argMax(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
+    if (!isValidMove(res,ghost))
+        res = argMax(1, pacman.j, 3, ghost.j);
+    if (!isValidMove(res,ghost))
+        res = argMax(0, pacman.i, 2, ghost.i);
+    return res;
+}
+
+function moveGhost(ghost) {
+    board[ghost.i][ghost.j] = ghost.on;
+
+
+    let next = GetNextMove(ghost);
+    if (next === 0) {
+        ghost.on = board[ghost.i][ghost.j + 1];
+        board[ghost.i][ghost.j + 1] = ghost.id;
+        ghost.j++;
+    }
+    if (next === 1) {
+        ghost.on = board[ghost.i + 1][ghost.j];
+        board[ghost.i + 1][ghost.j] = ghost.id;
+        ghost.i++;
+    }
+    if (next === 2) {
+        ghost.on = board[ghost.i][ghost.j - 1];
+        board[ghost.i][ghost.j - 1] = ghost.id;
+        ghost.j--;
+    }
+    if (next === 2) {
+        ghost.on = board[ghost.i - 1][ghost.j];
+        board[ghost.i - 1][ghost.j] = ghost.id;
+        ghost.i--;
+    }
+    //     if (ghost.j < pacman.j) {
+    //     if (ghost.i < pacman.i && ghost.i < 21 && board[ghost.i + 1][ghost.j] !== 4) {
+    //         ghost.on = board[ghost.i + 1][ghost.j];
+    //         board[ghost.i + 1][ghost.j] = ghost.id;
+    //         ghost.i++;
+    //     } else if (ghost.i > 0 && board[ghost.i - 1][ghost.j] !== 4) {
+    //         ghost.on = board[ghost.i - 1][ghost.j];
+    //         board[ghost.i - 1][ghost.j] = ghost.id;
+    //         ghost.i--;
+    //     } else {
+    //         if (ghost.j < pacman.j && ghost.j < 18 && board[ghost.i][ghost.j + 1] !== 4) {
+    //             ghost.on = board[ghost.i][ghost.j + 1];
+    //             board[ghost.i][ghost.j + 1] = ghost.id;
+    //             ghost.j++;
+    //         } else if (ghost.j > pacman.j && ghost.j > 0 && board[ghost.i][ghost.j - 1] !== 4) {
+    //             ghost.on = board[ghost.i][ghost.j - 1];
+    //             board[ghost.i][ghost.j - 1] = ghost.id;
+    //             ghost.j--;
+    //         }
+    //     }
+    // } else {
+    //     if (ghost.i < pacman.i && ghost.i < 21 && board[ghost.i + 1][ghost.j] !== 4) {
+    //         ghost.on = board[ghost.i + 1][ghost.j];
+    //         board[ghost.i + 1][ghost.j] = ghost.id;
+    //         ghost.i++;
+    //     } else if (ghost.i > 0 && board[ghost.i - 1][ghost.j] !== 4) {
+    //
+    //         if (ghost.j < pacman.j && ghost.j < 18 && board[ghost.i][ghost.j + 1] !== 4) {
+    //             ghost.on = board[ghost.i][ghost.j + 1];
+    //             board[ghost.i][ghost.j + 1] = ghost.id;
+    //             ghost.j++;
+    //         } else if (ghost.j > pacman.j && ghost.j > 0 && board[ghost.i][ghost.j - 1] !== 4) {
+    //             ghost.on = board[ghost.i][ghost.j - 1];
+    //             board[ghost.i][ghost.j - 1] = ghost.id;
+    //             ghost.j--;
+    //         } else {
+    //             ghost.on = board[ghost.i - 1][ghost.j];
+    //             board[ghost.i - 1][ghost.j] = ghost.id;
+    //             ghost.i--;
+    //         }
+    //     } else {
+    //         if (ghost.j < pacman.j && ghost.j < 18 && board[ghost.i][ghost.j + 1] !== 4) {
+    //             ghost.on = board[ghost.i][ghost.j + 1];
+    //             board[ghost.i][ghost.j + 1] = ghost.id;
+    //             ghost.j++;
+    //         } else if (ghost.j > pacman.j && ghost.j > 0 && board[ghost.i][ghost.j - 1] !== 4) {
+    //             ghost.on = board[ghost.i][ghost.j - 1];
+    //             board[ghost.i][ghost.j - 1] = ghost.id;
+    //             ghost.j--;
+    //         }
+    //     }
+
+    // }
+}
+
+function moveGhosts() {
+    moveGhost(binky);
+    moveGhost(pinky);
+    moveGhost(inky);
+}
+
 function UpdatePosition() {
     if (GameOn) {
         board[pacman.i][pacman.j] = 0;
-        var x = GetKeyPressed();
+        let x = GetKeyPressed();
+        if (interval_num % 10 === 0) {
+            moveGhosts();
+        }
         if (x === 2) {
             if (pacman.j > 0 && board[pacman.i][pacman.j - 1] !== 4) {
                 pacman.j--;
@@ -350,7 +495,7 @@ function UpdatePosition() {
         }
         board[pacman.i][pacman.j] = 2;
         interval_num++;
-        var currentTime = new Date();
+        let currentTime = new Date();
         time_elapsed = (currentTime - start_time) / 1000;
         if (score >= 200 && time_elapsed <= 10) {
             pac_color = "green";
@@ -362,5 +507,16 @@ function UpdatePosition() {
         } else {
             Draw();
         }
+    }
+}
+
+class Ghost {
+    constructor(i, j, id, color, on, lastMove) {
+        this.i = i;
+        this.j = j;
+        this.id = id;
+        this.color = color;
+        this.on = on;
+        this.lastMove = lastMove;
     }
 }
