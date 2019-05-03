@@ -1,6 +1,6 @@
 var canvas;
 var context;
-var pacman = new Object();
+var pacman = {};
 var bill;
 var binky;
 var pinky;
@@ -17,7 +17,7 @@ var food_put = 0;
 var interval_num = 0;
 var score2win = 0;
 pacman.lives = 3;
-bill.image = document.getElementById("bill");
+// bill.image = document.getElementById("bill");
 
 window.addEventListener("keydown", UpdatePosition, false);
 
@@ -211,7 +211,7 @@ function GetKeyPressed() {
 }
 
 function Draw() {
-    let center = new Object();
+    let center = {};
 
     function drawGhost(ghost) {
         context.arc(center.x, center.y, 15, Math.PI, 0); // half circle
@@ -370,43 +370,43 @@ function isValidMove(direction, ghost) {
 
 }
 
-function moveBill() {
-
-    function runAway() {
-        let res = (Math.random() * 4) % 4;
-        while (!isValidMove(res, bill))
-            res = (Math.random() * 4) % 4;
-        return res * 4;
-    }
-
-
-    board[bill.i][bill.j] = bill.on;
-
-    // let next = 2;
-    let next = runAway();
-    if (bill.lastMove !== 4)
-        bill.lastMove = next;
-    if (next === 0) {
-        bill.on = board[bill.i][bill.j + 1];
-        board[bill.i][bill.j + 1] = bill.id;
-        bill.j++;
-    }
-    if (next === 1) {
-        bill.on = board[bill.i + 1][bill.j];
-        board[bill.i + 1][bill.j] = bill.id;
-        bill.i++;
-    }
-    if (next === 2) {
-        bill.on = board[bill.i][bill.j - 1];
-        board[bill.i][bill.j - 1] = bill.id;
-        bill.j--;
-    }
-    if (next === 3) {
-        bill.on = board[bill.i - 1][bill.j];
-        board[bill.i - 1][bill.j] = bill.id;
-        bill.i--;
-    }
-}
+// function moveBill() {
+//
+//     function runAway() {
+//         let res = (Math.random() * 4) % 4;
+//         while (!isValidMove(res, bill))
+//             res = (Math.random() * 4) % 4;
+//         return res * 4;
+//     }
+//
+//
+//     board[bill.i][bill.j] = bill.on;
+//
+//     let next = 2;
+    // let next = runAway();
+    // if (bill.lastMove !== 4)
+    //     bill.lastMove = next;
+    // if (next === 0) {
+    //     bill.on = board[bill.i][bill.j + 1];
+    //     board[bill.i][bill.j + 1] = bill.id;
+    //     bill.j++;
+    // }
+    // if (next === 1) {
+    //     bill.on = board[bill.i + 1][bill.j];
+    //     board[bill.i + 1][bill.j] = bill.id;
+    //     bill.i++;
+    // }
+    // if (next === 2) {
+    //     bill.on = board[bill.i][bill.j - 1];
+    //     board[bill.i][bill.j - 1] = bill.id;
+    //     bill.j--;
+    // }
+    // if (next === 3) {
+    //     bill.on = board[bill.i - 1][bill.j];
+    //     board[bill.i - 1][bill.j] = bill.id;
+    //     bill.i--;
+    // }
+// }
 
 // function argMax(arg1, val1, arg2, val2) {
 //     if (val1 >= val2) return arg1;
@@ -423,6 +423,7 @@ function computeDistance(ghost, pacman) {
     let dy = ghost.j - pacman.j;
     return Math.sqrt((dx * dx) + (dy * dy));
 }
+
 
 /**
  * @return {number}
@@ -442,27 +443,27 @@ function GetNextMove(ghost) {
     ghost.i++;
     let shortest = x0;
     let res = 0;
-    if (!isValidMove(res, ghost) || res === 4 - ghost.lastMove) {
+    if (!isValidMove(res, ghost) || res === ghost.lastMove) {
         shortest = x1;
         res = 1;
     }
-    if (!isValidMove(res, ghost) || res === 4 - ghost.lastMove) {
+    if (!isValidMove(res, ghost) || res === ghost.lastMove) {
         shortest = x2;
         res = 2;
     }
-    if (!isValidMove(res, ghost) || res === 4 - ghost.lastMove) {
+    if (!isValidMove(res, ghost) || res === ghost.lastMove) {
         shortest = x3;
         res = 3;
     }
-    if ((x1 <= shortest || res === 4 - ghost.lastMove) && isValidMove(1, ghost)) {
+    if ((x1 <= shortest || res === ghost.lastMove) && isValidMove(1, ghost)) {
         shortest = x1;
         res = 1;
     }
-    if ((x2 <= shortest || res === 4 - ghost.lastMove) && isValidMove(2, ghost)) {
+    if ((x2 <= shortest || res === ghost.lastMove) && isValidMove(2, ghost)) {
         shortest = x2;
         res = 2;
     }
-    if ((x3 <= shortest || res === 4 - ghost.lastMove) && isValidMove(3, ghost)) {
+    if ((x3 <= shortest || res === ghost.lastMove) && isValidMove(3, ghost)) {
         res = 3;
     }
     if (!isValidMove(0, ghost) && !isValidMove(1, ghost) && !isValidMove(2, ghost) && !isValidMove(3, ghost))
@@ -492,6 +493,65 @@ function GetNextMove(ghost) {
     // if (isValidMove(res, ghost))
     //     return res;
     // return 0;
+}
+
+
+function getPossibleMoves(i, j, b) {
+    let possibleMoves = [];
+    if (x>0 && b[i+1][j]!==4)
+        possibleMoves.push(0);
+    if (x>0 && b[i+1][j]!==4)
+        possibleMoves.push(0);
+    if (x>0 && b[i+1][j]!==4)
+        possibleMoves.push(0);
+    if (x>0 && b[i+1][j]!==4)
+        possibleMoves.push(0);
+    return undefined;
+}
+
+function getPath(ghost) {
+    let b =  [
+        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+        [4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+        [4, 0, 4, 4, 0, 4, 4, 4, 0, 4, 0, 4, 4, 4, 0, 4, 4, 0, 4],
+        [4, 0, 4, 4, 0, 4, 4, 4, 0, 4, 0, 4, 4, 4, 0, 4, 4, 0, 4],
+        [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+        [4, 0, 4, 4, 0, 4, 0, 4, 4, 4, 4, 4, 0, 4, 0, 4, 4, 0, 4],
+        [4, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 4],
+        [4, 4, 4, 4, 0, 4, 4, 4, 0, 4, 0, 4, 4, 4, 0, 4, 4, 4, 4],
+        [4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 4, 4, 4],
+        [4, 4, 4, 4, 0, 4, 0, 4, 4, 0, 4, 4, 0, 4, 0, 4, 4, 4, 4],
+        [0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0],
+        [4, 4, 4, 4, 0, 4, 0, 4, 4, 4, 4, 4, 0, 4, 0, 4, 4, 4, 4],
+        [4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 4, 4, 4],
+        [4, 4, 4, 4, 0, 4, 0, 4, 4, 4, 4, 4, 0, 4, 0, 4, 4, 4, 4],
+        [4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+        [4, 0, 4, 4, 0, 4, 4, 4, 0, 4, 0, 4, 4, 4, 0, 4, 4, 0, 4],
+        [4, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 4],
+        [4, 4, 0, 4, 0, 4, 0, 4, 4, 4, 4, 4, 0, 4, 0, 4, 0, 4, 4],
+        [4, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 4],
+        [4, 0, 4, 4, 4, 4, 4, 4, 0, 4, 0, 4, 4, 4, 4, 4, 4, 0, 4],
+        [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+    ];
+    let close = [];
+    let path = [];
+    let q = [];
+    let i = ghost.i;
+    let j = ghost.j;
+    let found=false;
+    let node = {i: i, j: j, pre: null};
+    q.push(node);
+    b[j][i]=4;
+    b[pacman.j][pacman.i]=2;
+    while(!found && b[j][i]!==2 && q.length>0){
+        let tmpNode = q.shift();
+        i=tmpNode.i;
+        j=tmpNode.j;
+        close.push(tmpNode);
+        let posibbleMove = getPossibleMoves(i,j,b);
+    }
+
 }
 
 function moveGhost(ghost) {
@@ -602,10 +662,10 @@ function UpdatePosition() {
     if (GameOn) {
         board[pacman.i][pacman.j] = 0;
         let x = GetKeyPressed();
-        if (interval_num % 10 === 9) {
+        if (interval_num % 4 === 3) {
             moveGhosts();
         }
-        moveBill();
+        // moveBill();
         if (x === 2) {
             if (pacman.j > 0 && board[pacman.i][pacman.j - 1] !== 4) {
                 pacman.j--;
@@ -677,5 +737,6 @@ class Ghost {
         this.color = color;
         this.on = on;
         this.lastMove = lastMove;
+        // this.dir
     }
 }
