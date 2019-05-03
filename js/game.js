@@ -87,8 +87,8 @@ function start() {
         score2win = 0;
         score = 0;
         pac_color = "yellow";
-        pacman.i = 4;
-        pacman.j = 9;
+        // pacman.i = 4;
+        // pacman.j = 9;
         // bill.i = 20;
         // bill.j = 17;
         // bill.on=0;
@@ -141,6 +141,15 @@ function start() {
         // }
         // }
         // }
+        let pacx = parseInt(Math.random() * 20) + 2;
+        let pacy = parseInt(Math.random() * 17) + 2;
+        while (board[pacx][pacy] !== 0) {
+            pacx = parseInt(Math.random() * 20) + 2;
+            pacy = parseInt(Math.random() * 17) + 2;
+        }
+        pacman.i = pacx;
+        pacman.j = pacy;
+        board[pacx][pacy] = 2;
         while (food_remain >= 0) {
             var emptyCell = findRandomEmptyCell(board);
             if (food_remain >= 0.4 * num_balls) {
@@ -306,7 +315,7 @@ function Draw() {
                 context.fill();
                 context.font = "18px Arial";
                 context.fillStyle = "white"; //color of text
-                context.fillText("15", center.x - 10, center.y + 7);
+                context.fillText("15", center.x - 11, center.y + 7);
             } else if (board[j][i] === 6) {
                 //big (25 points)
                 context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
@@ -352,7 +361,7 @@ function Draw() {
 
 function isGhostPlace(di, dj, ghost) {
     let place = board[ghost.i + di][ghost.j + dj];
-    return !(place === 7 || place === 8 || place === 9 || place === 4 || place === 2);
+    return !(place === 7 || place === 8 || place === 9 || place === 4 || place === 2 || place === 10);
 
 }
 
@@ -370,43 +379,43 @@ function isValidMove(direction, ghost) {
 
 }
 
-// function moveBill() {
-//
-//     function runAway() {
-//         let res = (Math.random() * 4) % 4;
-//         while (!isValidMove(res, bill))
-//             res = (Math.random() * 4) % 4;
-//         return res * 4;
-//     }
-//
-//
-//     board[bill.i][bill.j] = bill.on;
-//
-//     let next = 2;
-    // let next = runAway();
-    // if (bill.lastMove !== 4)
-    //     bill.lastMove = next;
-    // if (next === 0) {
-    //     bill.on = board[bill.i][bill.j + 1];
-    //     board[bill.i][bill.j + 1] = bill.id;
-    //     bill.j++;
-    // }
-    // if (next === 1) {
-    //     bill.on = board[bill.i + 1][bill.j];
-    //     board[bill.i + 1][bill.j] = bill.id;
-    //     bill.i++;
-    // }
-    // if (next === 2) {
-    //     bill.on = board[bill.i][bill.j - 1];
-    //     board[bill.i][bill.j - 1] = bill.id;
-    //     bill.j--;
-    // }
-    // if (next === 3) {
-    //     bill.on = board[bill.i - 1][bill.j];
-    //     board[bill.i - 1][bill.j] = bill.id;
-    //     bill.i--;
-    // }
-// }
+function moveBill() {
+
+    function runAway() {
+        let res = parseInt(Math.random() * 4) % 4;
+        while (!isValidMove(res, bill))
+            res = parseInt(Math.random() * 4) % 4;
+        return res;
+    }
+
+
+    board[bill.i][bill.j] = bill.on;
+
+    // let next = 2;
+    let next = runAway();
+    if (bill.lastMove !== 4)
+        bill.lastMove = next;
+    if (next === 0) {
+        bill.on = board[bill.i][bill.j + 1];
+        board[bill.i][bill.j + 1] = bill.id;
+        bill.j++;
+    }
+    if (next === 1) {
+        bill.on = board[bill.i + 1][bill.j];
+        board[bill.i + 1][bill.j] = bill.id;
+        bill.i++;
+    }
+    if (next === 2) {
+        bill.on = board[bill.i][bill.j - 1];
+        board[bill.i][bill.j - 1] = bill.id;
+        bill.j--;
+    }
+    if (next === 3) {
+        bill.on = board[bill.i - 1][bill.j];
+        board[bill.i - 1][bill.j] = bill.id;
+        bill.i--;
+    }
+}
 
 // function argMax(arg1, val1, arg2, val2) {
 //     if (val1 >= val2) return arg1;
@@ -496,63 +505,6 @@ function GetNextMove(ghost) {
 }
 
 
-function getPossibleMoves(i, j, b) {
-    let possibleMoves = [];
-    if (x>0 && b[i+1][j]!==4)
-        possibleMoves.push(0);
-    if (x>0 && b[i+1][j]!==4)
-        possibleMoves.push(0);
-    if (x>0 && b[i+1][j]!==4)
-        possibleMoves.push(0);
-    if (x>0 && b[i+1][j]!==4)
-        possibleMoves.push(0);
-    return undefined;
-}
-
-function getPath(ghost) {
-    let b =  [
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        [4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-        [4, 0, 4, 4, 0, 4, 4, 4, 0, 4, 0, 4, 4, 4, 0, 4, 4, 0, 4],
-        [4, 0, 4, 4, 0, 4, 4, 4, 0, 4, 0, 4, 4, 4, 0, 4, 4, 0, 4],
-        [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-        [4, 0, 4, 4, 0, 4, 0, 4, 4, 4, 4, 4, 0, 4, 0, 4, 4, 0, 4],
-        [4, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 4],
-        [4, 4, 4, 4, 0, 4, 4, 4, 0, 4, 0, 4, 4, 4, 0, 4, 4, 4, 4],
-        [4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 4, 4, 4],
-        [4, 4, 4, 4, 0, 4, 0, 4, 4, 0, 4, 4, 0, 4, 0, 4, 4, 4, 4],
-        [0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0],
-        [4, 4, 4, 4, 0, 4, 0, 4, 4, 4, 4, 4, 0, 4, 0, 4, 4, 4, 4],
-        [4, 4, 4, 4, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 4, 4, 4],
-        [4, 4, 4, 4, 0, 4, 0, 4, 4, 4, 4, 4, 0, 4, 0, 4, 4, 4, 4],
-        [4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-        [4, 0, 4, 4, 0, 4, 4, 4, 0, 4, 0, 4, 4, 4, 0, 4, 4, 0, 4],
-        [4, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 4],
-        [4, 4, 0, 4, 0, 4, 0, 4, 4, 4, 4, 4, 0, 4, 0, 4, 0, 4, 4],
-        [4, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 4],
-        [4, 0, 4, 4, 4, 4, 4, 4, 0, 4, 0, 4, 4, 4, 4, 4, 4, 0, 4],
-        [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-        [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
-    ];
-    let close = [];
-    let path = [];
-    let q = [];
-    let i = ghost.i;
-    let j = ghost.j;
-    let found=false;
-    let node = {i: i, j: j, pre: null};
-    q.push(node);
-    b[j][i]=4;
-    b[pacman.j][pacman.i]=2;
-    while(!found && b[j][i]!==2 && q.length>0){
-        let tmpNode = q.shift();
-        i=tmpNode.i;
-        j=tmpNode.j;
-        close.push(tmpNode);
-        let posibbleMove = getPossibleMoves(i,j,b);
-    }
-
-}
 
 function moveGhost(ghost) {
     board[ghost.i][ghost.j] = ghost.on;
@@ -660,12 +612,13 @@ function Caught() {
 
 function UpdatePosition() {
     if (GameOn) {
+        if (interval_num % 4 === 3 && bill.color === "red")
+            moveBill();
         board[pacman.i][pacman.j] = 0;
         let x = GetKeyPressed();
-        if (interval_num % 4 === 3) {
+        if (interval_num % 6 === 5 && interval_num > 12) {
             moveGhosts();
         }
-        // moveBill();
         if (x === 2) {
             if (pacman.j > 0 && board[pacman.i][pacman.j - 1] !== 4) {
                 pacman.j--;
@@ -703,8 +656,11 @@ function UpdatePosition() {
         if (board[pacman.i][pacman.j] === 6) {
             score += 25;
         }
-        if (board[pacman.i][pacman.j] === 10) {
+        if (board[pacman.i][pacman.j] === 10 || isCaught(bill)) {
             score += 50;
+            bill.color="blue";
+            bill.i=22;
+            bill.j=22;
         }
         if (board[pacman.i][pacman.j] === 7 || board[pacman.i][pacman.j] === 8 || board[pacman.i][pacman.j] === 9) {
             Caught();
@@ -716,9 +672,11 @@ function UpdatePosition() {
         if (score >= 200 && time_elapsed <= 10) {
             pac_color = "green";
         }
+        // moveBill();
         if (isCaught(binky) || isCaught(pinky) || isCaught(inky)) {
             Caught();
         }
+        // moveBill();
         if (score === score2win) {
             Draw();
             window.clearInterval(interval);
