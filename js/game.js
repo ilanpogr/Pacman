@@ -1,6 +1,7 @@
 var canvas;
 var context;
 var pacman = new Object();
+var bill;
 var binky;
 var pinky;
 var inky;
@@ -15,6 +16,9 @@ var direction = 0;
 var food_put = 0;
 var interval_num = 0;
 var score2win = 0;
+pacman.lives = 3;
+bill.image = document.getElementById("bill");
+
 window.addEventListener("keydown", UpdatePosition, false);
 
 var GameOn = false;
@@ -85,9 +89,14 @@ function start() {
         pac_color = "yellow";
         pacman.i = 4;
         pacman.j = 9;
-        binky = new Ghost(20, 1, 7, "red", 0, 0);
-        pinky = new Ghost(1, 1, 8, "pink", 0, 0);
-        inky = new Ghost(1, 17, 9, "cyan", 0, 1);
+        // bill.i = 20;
+        // bill.j = 17;
+        // bill.on=0;
+        // bill.lastMove = 4;
+        bill = new Ghost(20, 17, 10, "red", 0, 4);
+        binky = new Ghost(20, 1, 7, "red", 0, 4);
+        pinky = new Ghost(1, 1, 8, "pink", 0, 4);
+        inky = new Ghost(1, 17, 9, "cyan", 0, 4);
         // binky.i = 20;
         // binky.j = 9;
         // binky.id = 7;
@@ -202,6 +211,8 @@ function GetKeyPressed() {
 }
 
 function Draw() {
+    let center = new Object();
+
     function drawGhost(ghost) {
         context.arc(center.x, center.y, 15, Math.PI, 0); // half circle
         context.lineTo(center.x, center.y);
@@ -230,12 +241,10 @@ function Draw() {
 
     context.clearRect(0, 0, canvas.width, canvas.height); //clean board
     lblScore.value = score;
-
     lblTime.value = time_elapsed;
 
-    for (var i = 0; i < 19; i++) {
-        for (var j = 0; j < 22; j++) {
-            var center = new Object();
+    for (let i = 0; i < 19; i++) {
+        for (let j = 0; j < 22; j++) {
             center.x = i * 30 + 15;
             center.y = j * 30 + 15;
             context.beginPath();
@@ -311,6 +320,28 @@ function Draw() {
                 context.fillStyle = "grey"; //color
                 context.fill();
 
+            } else if (board[j][i] === 10) {
+                context.arc(center.x, center.y, 10, 0, 2 * Math.PI); // circle
+                let my_gradient = context.createLinearGradient(center.x - 7, center.y - 7, center.x + 7, center.y + 7);
+                my_gradient.addColorStop(0, "red");
+                my_gradient.addColorStop(0.5, "white");
+                my_gradient.addColorStop(1, "red");
+                context.fillStyle = my_gradient;
+                context.fill();
+                context.closePath();
+                context.beginPath();
+                context.lineTo(center.x, center.y);
+                context.lineTo(center.x - 15, center.y - 7);
+                context.lineTo(center.x - 7, center.y - 15);
+                context.fill();
+                context.closePath();
+                context.beginPath();
+                context.lineTo(center.x, center.y);
+                context.lineTo(center.x + 15, center.y + 7);
+                context.lineTo(center.x + 7, center.y + 15);
+                context.fill();
+                context.closePath();
+
             }
         }
     }
@@ -319,55 +350,155 @@ function Draw() {
 }
 
 
+function isGhostPlace(di, dj, ghost) {
+    let place = board[ghost.i + di][ghost.j + dj];
+    return !(place === 7 || place === 8 || place === 9 || place === 4 || place === 2);
+
+}
+
 function isValidMove(direction, ghost) {
-    if (direction === 1 && ghost.i < 21 && board[ghost.i + 1][ghost.j] !== 4) {
+    if (direction === 1 && ghost.i < 21 && isGhostPlace(1, 0, ghost)) {
         return true;
     }
-    if (direction === 0 && ghost.j < 18 && board[ghost.i][ghost.j + 1] !== 4) {
+    if (direction === 0 && ghost.j < 18 && isGhostPlace(0, 1, ghost)) {
         return true;
     }
-    if (direction === 3 && ghost.i > 0 && board[ghost.i - 1][ghost.j] !== 4) {
+    if (direction === 3 && ghost.i > 0 && isGhostPlace(-1, 0, ghost)) {
         return true;
     }
-    if (direction === 2 && ghost.i > 0 && board[ghost.i][ghost.j - 1] !== 4) {
-        return true;
-    }
-    return false;
+    return direction === 2 && ghost.i > 0 && isGhostPlace(0, -1, ghost);
+
 }
 
-function argMax(arg1, val1, arg2, val2) {
-    if (val1 >= val2) return arg1;
-    return arg2;
+function moveBill() {
+
+    function runAway() {
+        let res = (Math.random() * 4) % 4;
+        while (!isValidMove(res, bill))
+            res = (Math.random() * 4) % 4;
+        return res * 4;
+    }
+
+
+    board[bill.i][bill.j] = bill.on;
+
+    // let next = 2;
+    let next = runAway();
+    if (bill.lastMove !== 4)
+        bill.lastMove = next;
+    if (next === 0) {
+        bill.on = board[bill.i][bill.j + 1];
+        board[bill.i][bill.j + 1] = bill.id;
+        bill.j++;
+    }
+    if (next === 1) {
+        bill.on = board[bill.i + 1][bill.j];
+        board[bill.i + 1][bill.j] = bill.id;
+        bill.i++;
+    }
+    if (next === 2) {
+        bill.on = board[bill.i][bill.j - 1];
+        board[bill.i][bill.j - 1] = bill.id;
+        bill.j--;
+    }
+    if (next === 3) {
+        bill.on = board[bill.i - 1][bill.j];
+        board[bill.i - 1][bill.j] = bill.id;
+        bill.i--;
+    }
 }
 
-function argMin(arg1, val1, arg2, val2) {
-    if (val1 <= val2) return arg1;
-    return arg2;
+// function argMax(arg1, val1, arg2, val2) {
+//     if (val1 >= val2) return arg1;
+//     return arg2;
+// }
+
+// function argMin(arg1, val1, arg2, val2) {
+//     if (val1 <= val2) return arg1;
+//     return arg2;
+// }
+
+function computeDistance(ghost, pacman) {
+    let dx = ghost.i - pacman.i;
+    let dy = ghost.j - pacman.j;
+    return Math.sqrt((dx * dx) + (dy * dy));
 }
 
 /**
  * @return {number}
  */
 function GetNextMove(ghost) {
-    let shorter_horizontal_arg = argMax(0, pacman.i, 2, ghost.i);
-    let shorter_horizontal_val = Math.min(Math.abs(pacman.i - ghost.i));
-    let shorter_vertical_arg = argMax(1, pacman.j, 3, ghost.j);
-    let shorter_vertical_val = Math.min(Math.abs(pacman.j - ghost.j));
-    let res = argMin(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
-    if (!isValidMove(res,ghost))
-        res = argMax(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
-    if (!isValidMove(res,ghost))
-        res = argMax(1, pacman.j, 3, ghost.j);
-    if (!isValidMove(res,ghost))
-        res = argMax(0, pacman.i, 2, ghost.i);
+    ghost.j++;
+    let x0 = computeDistance(ghost, pacman);
+    ghost.j--;
+    ghost.i++;
+    let x1 = computeDistance(ghost, pacman);
+    ghost.i--;
+    ghost.j--;
+    let x2 = computeDistance(ghost, pacman);
+    ghost.j++;
+    ghost.i--;
+    let x3 = computeDistance(ghost, pacman);
+    ghost.i++;
+    let shortest = x0;
+    let res = 0;
+    if (!isValidMove(res, ghost) || res === 4 - ghost.lastMove) {
+        shortest = x1;
+        res = 1;
+    }
+    if (!isValidMove(res, ghost) || res === 4 - ghost.lastMove) {
+        shortest = x2;
+        res = 2;
+    }
+    if (!isValidMove(res, ghost) || res === 4 - ghost.lastMove) {
+        shortest = x3;
+        res = 3;
+    }
+    if ((x1 <= shortest || res === 4 - ghost.lastMove) && isValidMove(1, ghost)) {
+        shortest = x1;
+        res = 1;
+    }
+    if ((x2 <= shortest || res === 4 - ghost.lastMove) && isValidMove(2, ghost)) {
+        shortest = x2;
+        res = 2;
+    }
+    if ((x3 <= shortest || res === 4 - ghost.lastMove) && isValidMove(3, ghost)) {
+        res = 3;
+    }
+    if (!isValidMove(0, ghost) && !isValidMove(1, ghost) && !isValidMove(2, ghost) && !isValidMove(3, ghost))
+        return 4;//stay
     return res;
+    // let shorter_horizontal_arg = argMax(0, pacman.i, 2, ghost.i);
+    // let shorter_horizontal_val = Math.abs(pacman.i - ghost.i);
+    // let shorter_vertical_arg = argMax(3, pacman.j, 1, ghost.j);
+    // let shorter_vertical_val = Math.abs(pacman.j - ghost.j);
+    // let res = argMin(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
+    // if (!isValidMove(res, ghost)) {
+    //     shorter_horizontal_arg = argMin(0, pacman.i, 2, ghost.i);
+    //     shorter_horizontal_val = Math.abs(pacman.i - ghost.i);
+    //     shorter_vertical_arg = argMin(3, pacman.j, 1, ghost.j);
+    //     shorter_vertical_val = Math.abs(pacman.j - ghost.j);
+    //     res = argMin(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
+    //     // shorter_vertical_val = Math.min(Math.abs(pacman.j - ghost.j));
+    // }
+    // if (!isValidMove(res, ghost))
+    //     res = argMax(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
+    //
+    // if (!isValidMove(res, ghost)) {
+    //     res = argMax(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
+    //     // res = argMin(0, pacman.i, 2, ghost.i);
+    //     // shorter_horizontal_val = Math.min(Math.abs(pacman.i - ghost.i));
+    // }
+    // if (isValidMove(res, ghost))
+    //     return res;
+    // return 0;
 }
 
 function moveGhost(ghost) {
     board[ghost.i][ghost.j] = ghost.on;
-
-
     let next = GetNextMove(ghost);
+    if (ghost.lastMove !== 4)
+        ghost.lastMove = next;
     if (next === 0) {
         ghost.on = board[ghost.i][ghost.j + 1];
         board[ghost.i][ghost.j + 1] = ghost.id;
@@ -383,7 +514,7 @@ function moveGhost(ghost) {
         board[ghost.i][ghost.j - 1] = ghost.id;
         ghost.j--;
     }
-    if (next === 2) {
+    if (next === 3) {
         ghost.on = board[ghost.i - 1][ghost.j];
         board[ghost.i - 1][ghost.j] = ghost.id;
         ghost.i--;
@@ -449,13 +580,32 @@ function moveGhosts() {
     moveGhost(inky);
 }
 
+function isCaught(ghost) {
+    return ghost.i === pacman.i && ghost.j === pacman.j;
+}
+
+function Caught() {
+    pacman.lives--;
+    if (pacman.lives > 0) {
+        window.clearInterval(interval);
+        window.alert("lost");
+        start();
+    } else {
+        //todo - endgame;
+        Draw();
+        window.clearInterval(interval);
+        window.alert("lost");
+    }
+}
+
 function UpdatePosition() {
     if (GameOn) {
         board[pacman.i][pacman.j] = 0;
         let x = GetKeyPressed();
-        if (interval_num % 10 === 0) {
+        if (interval_num % 10 === 9) {
             moveGhosts();
         }
+        moveBill();
         if (x === 2) {
             if (pacman.j > 0 && board[pacman.i][pacman.j - 1] !== 4) {
                 pacman.j--;
@@ -493,12 +643,21 @@ function UpdatePosition() {
         if (board[pacman.i][pacman.j] === 6) {
             score += 25;
         }
+        if (board[pacman.i][pacman.j] === 10) {
+            score += 50;
+        }
+        if (board[pacman.i][pacman.j] === 7 || board[pacman.i][pacman.j] === 8 || board[pacman.i][pacman.j] === 9) {
+            Caught();
+        }
         board[pacman.i][pacman.j] = 2;
         interval_num++;
         let currentTime = new Date();
         time_elapsed = (currentTime - start_time) / 1000;
         if (score >= 200 && time_elapsed <= 10) {
             pac_color = "green";
+        }
+        if (isCaught(binky) || isCaught(pinky) || isCaught(inky)) {
+            Caught();
         }
         if (score === score2win) {
             Draw();
