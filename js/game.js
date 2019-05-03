@@ -15,20 +15,25 @@ var loaded = false;
 var direction = 0;
 var food_put = 0;
 var interval_num = 0;
-var score2win = 0;
+var score2win = 50;
 pacman.lives = 3;
-// bill.image = document.getElementById("bill");
 
 window.addEventListener("keydown", UpdatePosition, false);
 
 var GameOn = false;
 
+/**
+ * First Game Start
+ */
 function startGame() {
     display_game();
     GameOn = true;
     start();
 }
 
+/**
+ * Regular Game start
+ */
 function start() {
     if (GameOn) {
         canvas = document.getElementById('canvas');
@@ -82,7 +87,7 @@ function start() {
         //     [4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4],
         //     [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
         // ];
-        direction = 0;
+        // direction = 0;
         interval_num = 0;
         score2win = 0;
         score = 0;
@@ -92,11 +97,12 @@ function start() {
         // bill.i = 20;
         // bill.j = 17;
         // bill.on=0;
-        // bill.lastMove = 4;
         bill = new Ghost(20, 17, 10, "red", 0, 4);
         binky = new Ghost(20, 1, 7, "red", 0, 4);
         pinky = new Ghost(1, 1, 8, "pink", 0, 4);
         inky = new Ghost(1, 17, 9, "cyan", 0, 4);
+        // bill.lastMove = 4;
+        restart();
         // binky.i = 20;
         // binky.j = 9;
         // binky.id = 7;
@@ -141,15 +147,15 @@ function start() {
         // }
         // }
         // }
-        let pacx = parseInt(Math.random() * 20) + 2;
-        let pacy = parseInt(Math.random() * 17) + 2;
-        while (board[pacx][pacy] !== 0) {
-            pacx = parseInt(Math.random() * 20) + 2;
-            pacy = parseInt(Math.random() * 17) + 2;
-        }
-        pacman.i = pacx;
-        pacman.j = pacy;
-        board[pacx][pacy] = 2;
+        // let pacx = parseInt(Math.random() * 20) + 2;
+        // let pacy = parseInt(Math.random() * 17) + 2;
+        // while (board[pacx][pacy] !== 0) {
+        //     pacx = parseInt(Math.random() * 20) + 2;
+        //     pacy = parseInt(Math.random() * 17) + 2;
+        // }
+        // pacman.i = pacx;
+        // pacman.j = pacy;
+        // board[pacx][pacy] = 2;
         while (food_remain >= 0) {
             var emptyCell = findRandomEmptyCell(board);
             if (food_remain >= 0.4 * num_balls) {
@@ -178,9 +184,54 @@ function start() {
         addEventListener("keyup", function (e) {
             keysDown[e.code] = false;
         }, false);
-        interval = setInterval(UpdatePosition, 100);
+        interval = setInterval(UpdatePosition, 150);
     }
 }
+
+/**
+ * Restart When Pacman dies
+ */
+function restart() {
+    for (let k = 1; k < board.length-1; k++) {
+        for (let l = 1; l < board[0].length-1; l++) {
+            if (board[k][l] === 7) {
+                board[k][l] = binky.on;
+            }if (board[k][l] === 8) {
+                board[k][l] = pinky.on;
+            }if (board[k][l] === 9) {
+                board[k][l] = inky.on;
+            }if (board[k][l] === 10) {
+                board[k][l] = bill.on;
+            }
+        }
+    }
+    // direction = 0;
+    interval_num =0;
+    if (bill.color === "red") {
+        bill = new Ghost(20, 17, 10, "red", 0, 4);
+        board[bill.i][bill.j]=10;
+    }
+    binky = new Ghost(20, 1, 7, "red", 0, 4);
+    pinky = new Ghost(1, 1, 8, "pink", 0, 4);
+    inky = new Ghost(1, 17, 9, "cyan", 0, 4);
+    board[binky.i][binky.j]=binky.id;
+    board[pinky.i][pinky.j]=pinky.id;
+    board[inky.i][inky.j]=inky.id;
+    let pacx = parseInt(Math.random() * 20) + 2;
+    let pacy = parseInt(Math.random() * 17) + 2;
+    while (board[pacx][pacy] !== 0) {
+        pacx = parseInt(Math.random() * 20) + 2;
+        pacy = parseInt(Math.random() * 17) + 2;
+    }
+    pacman.i = pacx;
+    pacman.j = pacy;
+    board[pacx][pacy] = 2;
+    keysDown={}
+    interval = setInterval(UpdatePosition, 150);
+}
+
+//todo - Reset button
+
 
 function findRandomEmptyCell(board) {
     var i = Math.floor((Math.random() * 21) + 1);
@@ -192,10 +243,6 @@ function findRandomEmptyCell(board) {
     return [i, j];
 }
 
-
-/**
- * @return {number}
- */
 function GetKeyPressed() {
     if (keysDown['ArrowUp']) {
         direction = 1.5;
@@ -358,7 +405,6 @@ function Draw() {
 
 }
 
-
 function isGhostPlace(di, dj, ghost) {
     let place = board[ghost.i + di][ghost.j + dj];
     return !(place === 7 || place === 8 || place === 9 || place === 4 || place === 2 || place === 10);
@@ -417,16 +463,6 @@ function moveBill() {
     }
 }
 
-// function argMax(arg1, val1, arg2, val2) {
-//     if (val1 >= val2) return arg1;
-//     return arg2;
-// }
-
-// function argMin(arg1, val1, arg2, val2) {
-//     if (val1 <= val2) return arg1;
-//     return arg2;
-// }
-
 function computeDistance(ghost, pacman) {
     let dx = ghost.i - pacman.i;
     let dy = ghost.j - pacman.j;
@@ -434,9 +470,6 @@ function computeDistance(ghost, pacman) {
 }
 
 
-/**
- * @return {number}
- */
 function GetNextMove(ghost) {
     ghost.j++;
     let x0 = computeDistance(ghost, pacman);
@@ -478,33 +511,7 @@ function GetNextMove(ghost) {
     if (!isValidMove(0, ghost) && !isValidMove(1, ghost) && !isValidMove(2, ghost) && !isValidMove(3, ghost))
         return 4;//stay
     return res;
-    // let shorter_horizontal_arg = argMax(0, pacman.i, 2, ghost.i);
-    // let shorter_horizontal_val = Math.abs(pacman.i - ghost.i);
-    // let shorter_vertical_arg = argMax(3, pacman.j, 1, ghost.j);
-    // let shorter_vertical_val = Math.abs(pacman.j - ghost.j);
-    // let res = argMin(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
-    // if (!isValidMove(res, ghost)) {
-    //     shorter_horizontal_arg = argMin(0, pacman.i, 2, ghost.i);
-    //     shorter_horizontal_val = Math.abs(pacman.i - ghost.i);
-    //     shorter_vertical_arg = argMin(3, pacman.j, 1, ghost.j);
-    //     shorter_vertical_val = Math.abs(pacman.j - ghost.j);
-    //     res = argMin(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
-    //     // shorter_vertical_val = Math.min(Math.abs(pacman.j - ghost.j));
-    // }
-    // if (!isValidMove(res, ghost))
-    //     res = argMax(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
-    //
-    // if (!isValidMove(res, ghost)) {
-    //     res = argMax(shorter_horizontal_arg, shorter_horizontal_val, shorter_vertical_arg, shorter_vertical_val);
-    //     // res = argMin(0, pacman.i, 2, ghost.i);
-    //     // shorter_horizontal_val = Math.min(Math.abs(pacman.i - ghost.i));
-    // }
-    // if (isValidMove(res, ghost))
-    //     return res;
-    // return 0;
 }
-
-
 
 function moveGhost(ghost) {
     board[ghost.i][ghost.j] = ghost.on;
@@ -531,59 +538,6 @@ function moveGhost(ghost) {
         board[ghost.i - 1][ghost.j] = ghost.id;
         ghost.i--;
     }
-    //     if (ghost.j < pacman.j) {
-    //     if (ghost.i < pacman.i && ghost.i < 21 && board[ghost.i + 1][ghost.j] !== 4) {
-    //         ghost.on = board[ghost.i + 1][ghost.j];
-    //         board[ghost.i + 1][ghost.j] = ghost.id;
-    //         ghost.i++;
-    //     } else if (ghost.i > 0 && board[ghost.i - 1][ghost.j] !== 4) {
-    //         ghost.on = board[ghost.i - 1][ghost.j];
-    //         board[ghost.i - 1][ghost.j] = ghost.id;
-    //         ghost.i--;
-    //     } else {
-    //         if (ghost.j < pacman.j && ghost.j < 18 && board[ghost.i][ghost.j + 1] !== 4) {
-    //             ghost.on = board[ghost.i][ghost.j + 1];
-    //             board[ghost.i][ghost.j + 1] = ghost.id;
-    //             ghost.j++;
-    //         } else if (ghost.j > pacman.j && ghost.j > 0 && board[ghost.i][ghost.j - 1] !== 4) {
-    //             ghost.on = board[ghost.i][ghost.j - 1];
-    //             board[ghost.i][ghost.j - 1] = ghost.id;
-    //             ghost.j--;
-    //         }
-    //     }
-    // } else {
-    //     if (ghost.i < pacman.i && ghost.i < 21 && board[ghost.i + 1][ghost.j] !== 4) {
-    //         ghost.on = board[ghost.i + 1][ghost.j];
-    //         board[ghost.i + 1][ghost.j] = ghost.id;
-    //         ghost.i++;
-    //     } else if (ghost.i > 0 && board[ghost.i - 1][ghost.j] !== 4) {
-    //
-    //         if (ghost.j < pacman.j && ghost.j < 18 && board[ghost.i][ghost.j + 1] !== 4) {
-    //             ghost.on = board[ghost.i][ghost.j + 1];
-    //             board[ghost.i][ghost.j + 1] = ghost.id;
-    //             ghost.j++;
-    //         } else if (ghost.j > pacman.j && ghost.j > 0 && board[ghost.i][ghost.j - 1] !== 4) {
-    //             ghost.on = board[ghost.i][ghost.j - 1];
-    //             board[ghost.i][ghost.j - 1] = ghost.id;
-    //             ghost.j--;
-    //         } else {
-    //             ghost.on = board[ghost.i - 1][ghost.j];
-    //             board[ghost.i - 1][ghost.j] = ghost.id;
-    //             ghost.i--;
-    //         }
-    //     } else {
-    //         if (ghost.j < pacman.j && ghost.j < 18 && board[ghost.i][ghost.j + 1] !== 4) {
-    //             ghost.on = board[ghost.i][ghost.j + 1];
-    //             board[ghost.i][ghost.j + 1] = ghost.id;
-    //             ghost.j++;
-    //         } else if (ghost.j > pacman.j && ghost.j > 0 && board[ghost.i][ghost.j - 1] !== 4) {
-    //             ghost.on = board[ghost.i][ghost.j - 1];
-    //             board[ghost.i][ghost.j - 1] = ghost.id;
-    //             ghost.j--;
-    //         }
-    //     }
-
-    // }
 }
 
 function moveGhosts() {
@@ -598,13 +552,13 @@ function isCaught(ghost) {
 
 function Caught() {
     pacman.lives--;
+    Draw();
     if (pacman.lives > 0) {
         window.clearInterval(interval);
         window.alert("lost");
-        start();
+        restart();
     } else {
-        //todo - endgame;
-        Draw();
+        //     todo - endgame;
         window.clearInterval(interval);
         window.alert("lost");
     }
@@ -658,9 +612,9 @@ function UpdatePosition() {
         }
         if (board[pacman.i][pacman.j] === 10 || isCaught(bill)) {
             score += 50;
-            bill.color="blue";
-            bill.i=22;
-            bill.j=22;
+            bill.color = "blue";
+            bill.i = 22;
+            bill.j = 22;
         }
         if (board[pacman.i][pacman.j] === 7 || board[pacman.i][pacman.j] === 8 || board[pacman.i][pacman.j] === 9) {
             Caught();
@@ -669,14 +623,21 @@ function UpdatePosition() {
         interval_num++;
         let currentTime = new Date();
         time_elapsed = (currentTime - start_time) / 1000;
+        //todo - listener for time past
+        if (time_elapsed >= num_time) {
+            window.clearInterval(interval);
+            if (score >= 150) {
+                window.alert("We Have a Winner!");
+            } else {
+                window.alert("You Can Do Better..");
+            }
+        }
         if (score >= 200 && time_elapsed <= 10) {
             pac_color = "green";
         }
-        // moveBill();
         if (isCaught(binky) || isCaught(pinky) || isCaught(inky)) {
             Caught();
         }
-        // moveBill();
         if (score === score2win) {
             Draw();
             window.clearInterval(interval);
@@ -695,6 +656,5 @@ class Ghost {
         this.color = color;
         this.on = on;
         this.lastMove = lastMove;
-        // this.dir
     }
 }
