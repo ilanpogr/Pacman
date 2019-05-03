@@ -192,31 +192,34 @@ function start() {
  * Restart When Pacman dies
  */
 function restart() {
-    for (let k = 1; k < board.length-1; k++) {
-        for (let l = 1; l < board[0].length-1; l++) {
+    for (let k = 1; k < board.length - 1; k++) {
+        for (let l = 1; l < board[0].length - 1; l++) {
             if (board[k][l] === 7) {
                 board[k][l] = binky.on;
-            }if (board[k][l] === 8) {
+            }
+            if (board[k][l] === 8) {
                 board[k][l] = pinky.on;
-            }if (board[k][l] === 9) {
+            }
+            if (board[k][l] === 9) {
                 board[k][l] = inky.on;
-            }if (board[k][l] === 10) {
+            }
+            if (board[k][l] === 10) {
                 board[k][l] = bill.on;
             }
         }
     }
     // direction = 0;
-    interval_num =0;
+    interval_num = 0;
     if (bill.color === "red") {
         bill = new Ghost(20, 17, 10, "red", 0, 4);
-        board[bill.i][bill.j]=10;
+        board[bill.i][bill.j] = 10;
     }
     binky = new Ghost(20, 1, 7, "red", 0, 4);
     pinky = new Ghost(1, 1, 8, "pink", 0, 4);
     inky = new Ghost(1, 17, 9, "cyan", 0, 4);
-    board[binky.i][binky.j]=binky.id;
-    board[pinky.i][pinky.j]=pinky.id;
-    board[inky.i][inky.j]=inky.id;
+    board[binky.i][binky.j] = binky.id;
+    board[pinky.i][pinky.j] = pinky.id;
+    board[inky.i][inky.j] = inky.id;
     let pacx = parseInt(Math.random() * 20) + 2;
     let pacy = parseInt(Math.random() * 17) + 2;
     while (board[pacx][pacy] !== 0) {
@@ -226,7 +229,7 @@ function restart() {
     pacman.i = pacx;
     pacman.j = pacy;
     board[pacx][pacy] = 2;
-    keysDown={}
+    keysDown = {}
     interval = setInterval(UpdatePosition, 150);
 }
 
@@ -275,7 +278,30 @@ function Draw() {
         context.fillStyle = ghost.color; //color
         context.fill();
         context.beginPath();
-        context.fillRect(center.x - 15, center.y, 30, 15);
+        if( interval_num%10<5) {
+            context.lineTo(center.x - 15, center.y);
+            context.lineTo(center.x - 15, center.y + 15);
+            context.lineTo(center.x - 10, center.y + 10);
+            context.lineTo(center.x - 5, center.y + 15);
+            context.lineTo(center.x, center.y + 10);
+            context.lineTo(center.x + 5, center.y + 15);
+            context.lineTo(center.x + 10, center.y + 10);
+            context.lineTo(center.x + 15, center.y + 15);
+            context.lineTo(center.x + 15, center.y);
+            context.fill()
+        } else {
+            context.lineTo(center.x - 15, center.y);
+            context.lineTo(center.x - 15, center.y + 10);
+            context.lineTo(center.x - 10, center.y + 15);
+            context.lineTo(center.x - 5, center.y + 10);
+            context.lineTo(center.x, center.y + 15);
+            context.lineTo(center.x + 5, center.y + 10);
+            context.lineTo(center.x + 10, center.y + 15);
+            context.lineTo(center.x + 15, center.y + 10);
+            context.lineTo(center.x + 15, center.y);
+            context.fill()
+        }
+        // context.fillRect(center.x - 15, center.y, 30, 15);
         //Eyes
         context.beginPath();
         context.arc(center.x - 6, center.y - 2.5, 4, 0, 2 * Math.PI); // circle
@@ -554,13 +580,15 @@ function Caught() {
     pacman.lives--;
     Draw();
     if (pacman.lives > 0) {
-        window.clearInterval(interval);
-        window.alert("lost");
+        // while (window.interval !== undefined && window.interval !== 'undefined')
+            window.clearInterval(interval);
+        window.alert("You Lost 1 Life,\n" + pacman.lives + " Lives Remain");
         restart();
     } else {
         //     todo - endgame;
-        window.clearInterval(interval);
-        window.alert("lost");
+        // while (window.interval !== undefined && window.interval !== 'undefined')
+            window.clearInterval(interval);
+        window.alert("You Lost");
     }
 }
 
