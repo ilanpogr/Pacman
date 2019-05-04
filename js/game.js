@@ -19,6 +19,7 @@ var score2win = 50;
 var timeClock;
 var extraTimeDelta = 10;
 var showingMessage = false;
+var backgroundMusic = new Audio("assets/audio/pacman-beginning/pacman_beginning.wav");
 pacman.lives = 3;
 
 window.addEventListener("keydown", UpdatePosition, false);
@@ -39,6 +40,8 @@ function startGame() {
  */
 function start() {
     if (GameOn) {
+        backgroundMusic.loop = true;
+        backgroundMusic.play();
         pacman.lives = 3;
         canvas = document.getElementById('canvas');
         // board = new Array();
@@ -114,7 +117,7 @@ function start() {
             [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
         ];
         interval_num = 0;
-        score2win = 0;
+        score2win = 50;
         score = 0;
         pac_color = "yellow";
         timeClock = {i: 10, j: 10, id: 11, on: 0};
@@ -242,7 +245,7 @@ function restart() {
     }
     // interval.stopImmediatePropagation();
     if (interval === undefined)
-        interval = setInterval(UpdatePosition, 100);
+        interval = setInterval(UpdatePosition, 125);
 }
 
 //todo - Reset button
@@ -339,7 +342,7 @@ function Draw() {
     context.clearRect(0, 0, canvas.width, canvas.height); //clean board
     lblScore.value = score;
     lblTime.value = time_elapsed;
-    lblLife.value = pacman.lives;
+    lblLife.value = num_time;
 
     for (let i = 0; i < 19; i++) {
         for (let j = 0; j < 22; j++) {
@@ -677,6 +680,7 @@ function Caught() {
         window.clearInterval(interval);
         GameOn = false;
         window.alert("You Lost");
+        backgroundMusic.pause();
         display_settings_menu();
     }
 }
@@ -685,14 +689,14 @@ function Caught() {
  * @return {boolean}
  */
 function TimeAboutToStop(time_elpased) {
-    return time_elpased >= num_time - extraTimeDelta || num_time - extraTimeDelta <= 0;
+    return (time_elpased >= num_time - extraTimeDelta || num_time - extraTimeDelta <= 0) && extraTimeDelta>0;
 }
 
 function ExtraTime() {
     if (timeClock.on === 0) {
         let timx = parseInt(Math.random() * 18) + 2;
         let timy = parseInt(Math.random() * 15) + 2;
-        while (board[timx][timy] !== 0) {
+        while (board[timx][timy] !== 0 || (Math.abs(timx-pacman.i)+Math.abs(timy-pacman.j)<3)) {
             timx = parseInt(Math.random() * 18) + 2;
             timy = parseInt(Math.random() * 15) + 2;
         }
@@ -788,9 +792,11 @@ function UpdatePosition() {
             if (score >= 150) {
                 window.alert("We Have a Winner!");
                 GameOn = false;
+                display_settings_menu();
             } else {
                 GameOn = false;
                 window.alert("You Can Do Better..");
+                display_settings_menu();
             }
         }
         if (score >= 200 && time_elapsed <= 10) {
