@@ -17,7 +17,7 @@ var food_put = 0;
 var interval_num = 0;
 var score2win = 50;
 var timeClock;
-var extraTimeDelta=10;
+var extraTimeDelta = 10;
 var showingMessage = false;
 pacman.lives = 3;
 
@@ -175,10 +175,7 @@ function start() {
             }
             food_remain--;
         }
-        //     board[10][10] = 4;
-        // }
-        // if (num_monster < 2) {
-        //     board[10][8] = 4;
+
         // interval = setInterval(UpdatePosition, 100)
         // }
         keysDown = {};
@@ -195,6 +192,7 @@ function start() {
  * Restart When Pacman dies
  */
 function restart() {
+    interval = undefined;
     keysDown = {};
     for (let k = 1; k < board.length - 1; k++) {
         for (let l = 1; l < board[0].length - 1; l++) {
@@ -233,8 +231,18 @@ function restart() {
     pacman.i = pacx;
     pacman.j = pacy;
     board[pacx][pacy] = 2;
+
+    if (num_monster < 3) {
+        board[inky.i][inky.j] = 0;
+        inky = binky;
+    }
+    if (num_monster < 2) {
+        board[pinky.i][pinky.j] = 0;
+        pinky = binky;
+    }
     // interval.stopImmediatePropagation();
-    interval = setInterval(UpdatePosition, 100);
+    if (interval === undefined)
+        interval = setInterval(UpdatePosition, 100);
 }
 
 //todo - Reset button
@@ -605,8 +613,10 @@ function moveGhost(ghost) {
 
 function moveGhosts() {
     moveGhost(binky);
-    moveGhost(pinky);
-    moveGhost(inky);
+    if (num_monster > 1)
+        moveGhost(pinky);
+    if (num_monster > 2)
+        moveGhost(inky);
     Draw();
 }
 
@@ -650,12 +660,12 @@ function Caught() {
     pacman.lives--;
     score -= 10;
     score2win -= 10;
-    board[pacman.i][pacman.j]=0;
+    board[pacman.i][pacman.j] = 0;
     // Draw();
     if (pacman.lives > 0) {
         // while (window.interval !== undefined && window.interval !== 'undefined')
         window.clearTimeout(interval);
-            window.clearInterval(interval);
+        window.clearInterval(interval);
         // window.alert("You Lost 1 Life,\n" + pacman.lives + " Lives Remain");
         // Alert(pacman.lives +  " Lives Remain",3000)
 
@@ -664,7 +674,7 @@ function Caught() {
         //     todo - endgame;
         // while (window.interval !== undefined && window.interval !== 'undefined')
         window.clearTimeout(interval);
-            window.clearInterval(interval);
+        window.clearInterval(interval);
         GameOn = false;
         window.alert("You Lost");
         display_settings_menu();
@@ -675,7 +685,7 @@ function Caught() {
  * @return {boolean}
  */
 function TimeAboutToStop(time_elpased) {
-    return time_elpased >= num_time - extraTimeDelta || num_time - extraTimeDelta<=0;
+    return time_elpased >= num_time - extraTimeDelta || num_time - extraTimeDelta <= 0;
 }
 
 function ExtraTime() {
@@ -689,15 +699,15 @@ function ExtraTime() {
         timeClock.i = timx;
         timeClock.j = timy;
         board[timx][timy] = 11;
-        timeClock.on=11;
+        timeClock.on = 11;
         Draw();
     }
 }
 
 function addExtraTime() {
     extraTimeDelta--;
-    num_time+=10;
-    timeClock.on=0;
+    num_time += 10;
+    timeClock.on = 0;
     Draw();
 }
 
@@ -760,7 +770,7 @@ function UpdatePosition() {
             bill.i = 22;
             bill.j = 22;
         }
-        if (board[pacman.i][pacman.j]===11 ||(timeClock.i===pacman.i && timeClock.j===pacman.j)){
+        if (board[pacman.i][pacman.j] === 11 || (timeClock.i === pacman.i && timeClock.j === pacman.j)) {
             addExtraTime();
         }
 
@@ -788,8 +798,7 @@ function UpdatePosition() {
         }
         if (isCaught(binky) || isCaught(pinky) || isCaught(inky)) {
             Caught();
-        }
-        else if (board[pacman.i][pacman.j] === 7 || board[pacman.i][pacman.j] === 8 || board[pacman.i][pacman.j] === 9) {
+        } else if (board[pacman.i][pacman.j] === 7 || board[pacman.i][pacman.j] === 8 || board[pacman.i][pacman.j] === 9) {
             Caught();
         }
         if (score === score2win) {
