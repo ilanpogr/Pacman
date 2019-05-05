@@ -116,26 +116,26 @@ function setKey(key) {
 }
 
 function numOfBallsCheck() {
-    var x = document.getElementById("num_balls").value;
-    if (x < 50) {
+    num_balls = document.getElementById("num_balls").value;
+    if (num_balls < 50) {
         document.getElementById("num_balls").value = 50;
-    } else if (x > 90) {
+    } else if (num_balls > 90) {
         document.getElementById("num_balls").value = 90;
     }
 }
 
 function timeCheck() {
-    var x = document.getElementById("time_settings").value;
-    if (x < 60) {
+    num_time = document.getElementById("time_settings").value;
+    if (num_time < 60) {
         document.getElementById("time_settings").value = 60;
     }
 }
 
 function monstersCheck() {
-    var x = document.getElementById("num_monsters").value;
-    if (x < 1) {
+    num_monster = document.getElementById("num_monsters").value;
+    if (num_monster < 1) {
         document.getElementById("num_monsters").value = 1;
-    } else if (x > 3) {
+    } else if (num_monster > 3) {
         document.getElementById("num_monsters").value = 3;
     }
 }

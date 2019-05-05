@@ -43,7 +43,7 @@ $(document).ready(function (e) {
             || $.trim(sLast).length === 0 || $.trim(sPass).length === 0) {
             alert('All fields are mandatory');
         } else if (!validateName(sFirst) || !validateName(sLast)) {
-            alert('First and last name must contain only characters');
+            alert('First and on name must contain only characters');
         } else if (!validatePassword(sPass)) {
             alert('Your password has to be at least 8 characters long,\n and contain at least one digit and one letter ');
         } else if (!validateEmail(sEmail)) {

@@ -100,6 +100,7 @@ function display_login_menu() {
 }
 
 function display_settings_menu() {
+    backgroundMusic.pause();
     var stage = document.getElementById("settings");
     closeAllDisplay();
     if (stage.style.display === "none") {
