@@ -342,8 +342,7 @@ function Draw() {
     context.clearRect(0, 0, canvas.width, canvas.height); //clean board
     lblScore.value = score;
     lblTime.value = time_elapsed;
-    lblLife.value = num_time;
-
+    lblLife.value = pacman.lives;
     for (let i = 0; i < 19; i++) {
         for (let j = 0; j < 22; j++) {
             center.x = i * 30 + 15;
