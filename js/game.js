@@ -691,7 +691,19 @@ function UpdatePosition() {
             Draw();
             window.clearTimeout(interval);
             window.clearInterval(interval);
-            GameOn = false;
+            GameOn = false;const winNotification = window.createNotification({
+                theme: 'success',
+                closeOnClick: true,
+                onclick: false,
+                positionClass: 'nfc-top-right',
+                displayCloseButton: true,
+                showDuration: 4000
+
+            });
+            winNotification({
+                title: 'Winner!',
+                message: 'LOOK AT YOU!!'
+            });
             window.alert("Game completed");
         } else {
             Draw();
