@@ -22,7 +22,6 @@
     <a href="#" id="welcome_menu" onclick="display_welcome_menu()">Welcome</a>
     <a href="#" id="login_menu" onclick="display_login_menu()">Login</a>
     <a href="#" id="register_menu" onclick="display_register_menu()">Register</a>
-    <!--<a href="#" id="settings_menu" onclick="display_settings_menu()">Settings</a>-->
     <a href="#" id="about_btn">About</a>
 </div>
 
@@ -33,23 +32,23 @@
 </div>
 
 <div id="game" style="display: none">
-    <button id="btnNewGame"  type="button" onclick="display_settings_menu()" style="width: 400px; height: 40px ">New Game</button>
+    <div id="game_info">
     <br/>
-    SCORE:
-    <input id="lblScore" type="text"/>
-    <br/>
-    TIME:
-    <input id="lblTime" type="text"/>
-    <br/>
-    Lives:
-    <input id="lblLife" type="number">
+        SCORE:
+        <input id="lblScore" type="text"/>
+        <br/>
+        TIME:
+        <input id="lblTime" type="text"/>
+        <br/>
+        Lives:
+        <input id="lblLife" type="number">
+    </div>
     <canvas id="canvas" height="660" width="570"></canvas>
-    <!--<img id="bill" width="30" height="30" src="assets/images/bill.png" alt="Bill Cypher">-->
+    <button id="btnNewGame"  type="button" onclick="display_settings_menu()">New Game</button>
 </div>
 
 <!--WELCOME SCREEN-->
-<!--<div id="welcome" style="display: none">-->
-    <div id="welcome">
+<div id="welcome" style="display: none">
     <div id="all">
         <div id="left"></div>
         <div id="header"><h1>PAC-MAN</h1></div>
@@ -104,7 +103,8 @@
 </div>
 
 <!--SETTINGS_SCREEN-->
-<div id="settings" style="display:none">
+<!--<div id="settings" style="display:none">-->
+<div id="settings" style="display:block">
     <h1 class="settings_header1">How would you like to move?</h1>
     <div class="grid-container">
         <div></div>
@@ -210,6 +210,19 @@
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
         if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    document.onkeydown = function(evt) {
+        evt = evt || window.event;
+        var isEscape = false;
+        if ("key" in evt) {
+            isEscape = (evt.key === "Escape" || evt.key === "Esc");
+        } else {
+            isEscape = (evt.keyCode === 27);
+        }
+        if (isEscape) {
             modal.style.display = "none";
         }
     };

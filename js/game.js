@@ -19,7 +19,7 @@ var score2win = 50;
 var timeClock;
 var extraTimeDelta = 10;
 var showingMessage = false;
-var backgroundMusic = new Audio("assets/audio/pacman-beginning/pacman_beginning.wav");
+var backgroundMusic = new Audio("assets/audio/pacman-beginning/Sweet Success.mp3");
 pacman.lives = 3;
 
 window.addEventListener("keydown", UpdatePosition, false);
@@ -44,53 +44,6 @@ function start() {
         backgroundMusic.play();
         pacman.lives = 3;
         canvas = document.getElementById('canvas');
-        // board = new Array();
-        // board = [
-        //     [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
-        //     [4, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-        //     [4, 1, 4, 4, 1, 4, 4, 4, 1, 4, 1, 4, 4, 4, 1, 4, 4, 1, 4],
-        //     [4, 1, 4, 4, 1, 4, 4, 4, 1, 4, 1, 4, 4, 4, 1, 4, 4, 1, 4],
-        //     [4, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-        //     [4, 1, 4, 4, 1, 4, 1, 4, 4, 4, 4, 4, 1, 4, 1, 4, 4, 1, 4],
-        //     [4, 1, 1, 1, 1, 4, 1, 1, 1, 4, 1, 1, 1, 4, 1, 1, 1, 1, 4],
-        //     [4, 4, 4, 4, 1, 4, 4, 4, 1, 4, 1, 4, 4, 4, 1, 4, 4, 4, 4],
-        //     [3, 3, 3, 4, 1, 4, 1, 1, 1, 1, 1, 1, 1, 4, 1, 4, 3, 3, 3],
-        //     [4, 4, 4, 4, 1, 4, 1, 4, 4, 3, 4, 4, 1, 4, 1, 4, 4, 4, 4],
-        //     [1, 1, 1, 1, 1, 1, 1, 4, 3, 3, 3, 4, 1, 1, 1, 1, 1, 1, 1],
-        //     [4, 4, 4, 4, 1, 4, 1, 4, 4, 4, 4, 4, 1, 4, 1, 4, 4, 4, 4],
-        //     [3, 3, 3, 4, 1, 4, 1, 1, 1, 1, 1, 1, 1, 4, 1, 4, 3, 3, 3],
-        //     [4, 4, 4, 4, 1, 4, 1, 4, 4, 4, 4, 4, 1, 4, 1, 4, 4, 4, 4],
-        //     [4, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-        //     [4, 1, 4, 4, 1, 4, 4, 4, 1, 4, 1, 4, 4, 4, 1, 4, 4, 1, 4],
-        //     [4, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 4],
-        //     [4, 4, 1, 4, 1, 4, 1, 4, 4, 4, 4, 4, 1, 4, 1, 4, 1, 4, 4],
-        //     [4, 1, 1, 1, 1, 4, 1, 1, 1, 4, 1, 1, 1, 4, 1, 1, 1, 1, 4],
-        //     [4, 1, 4, 4, 4, 4, 4, 4, 1, 4, 1, 4, 4, 4, 4, 4, 4, 1, 4],
-        //     [4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4],
-        //     [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
-        // ];
-        // direction = 0;
-        // pacman.i = 4;
-        // pacman.j = 9;
-        // bill.i = 20;
-        // bill.j = 17;
-        // bill.on=0;
-        // bill.lastMove = 4;
-        // binky.i = 20;
-        // binky.j = 9;
-        // binky.id = 7;
-        // binky.color = "red";
-        // binky.on = 0;
-        // pinky.i = 10;
-        // pinky.j = 8;
-        // pinky.id = 8;
-        // pinky.color = "pink";
-        // pinky.on = 0;
-        // inky.i = 10;
-        // inky.j = 10;
-        // inky.id = 9;
-        // inky.color = "cyan";
-        // inky.on = 0;
         context = canvas.getContext("2d");
         board = [
             [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
@@ -129,41 +82,6 @@ function start() {
 
         var food_remain = num_balls;
         start_time = new Date();
-        // var cnt = 178;
-        // var pacman_remain = 1;
-        // for (var i = 1; i < 21; i++) {
-        // board[i] = new Array();
-        // put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
-        // for (var j = 0; j < 19; j++) {
-        // if ((i === 3 && j === 3) || (i === 3 && j === 4) || (i === 3 && j === 5) || (i === 6 && j === 1) || (i === 6 && j === 2)) {
-        //     board[i][j] = 4;
-        // } else {
-        // if (board[i][j] !== 4 && board[i][j] !== 3) {
-        //     var randomNum = Math.random();
-        //     if (randomNum <= food_remain / cnt) {
-        // food_remain--;
-        // board[i][j] = 1;
-        // } else if (randomNum < 1.0 * (pacman_remain + food_remain) / cnt) {
-        // pacman.i = i;
-        // pacman.j = j;
-        // pacman_remain--;
-        // board[i][j] = 2;
-        // } else {
-        // board[i][j] = 0;
-        // }
-        // cnt--;
-        // }
-        // }
-        // }
-        // let pacx = parseInt(Math.random() * 20) + 2;
-        // let pacy = parseInt(Math.random() * 17) + 2;
-        // while (board[pacx][pacy] !== 0) {
-        //     pacx = parseInt(Math.random() * 20) + 2;
-        //     pacy = parseInt(Math.random() * 17) + 2;
-        // }
-        // pacman.i = pacx;
-        // pacman.j = pacy;
-        // board[pacx][pacy] = 2;
         while (food_remain >= 0) {
             var emptyCell = findRandomEmptyCell(board);
             if (food_remain >= 0.4 * num_balls) {
@@ -178,9 +96,6 @@ function start() {
             }
             food_remain--;
         }
-
-        // interval = setInterval(UpdatePosition, 100)
-        // }
         keysDown = {};
         addEventListener("keydown", function (e) {
             keysDown[e.code] = true;
@@ -213,7 +128,6 @@ function restart() {
             }
         }
     }
-    // direction = 0;
     interval_num = 0;
     if (bill.color === "red") {
         bill = new Ghost(20, 17, 10, "red", 0, 4);
@@ -243,7 +157,6 @@ function restart() {
         board[pinky.i][pinky.j] = 0;
         pinky = binky;
     }
-    // interval.stopImmediatePropagation();
     if (interval === undefined)
         interval = setInterval(UpdatePosition, 125);
 }
@@ -625,38 +538,6 @@ function moveGhosts() {
 function isCaught(ghost) {
     return ghost.i === pacman.i && ghost.j === pacman.j;
 }
-
-// function drawAlert(string) {
-//     context.beginPath();
-//     context.fillStyle = "blue";
-//     context.fillRect(0,120,canvas.width,240);
-//     context.fillStyle = "white";
-//     context.font = "bold 64px Arial";
-//     context.fillText(string, 10, 300, canvas.width - 20);
-// }
-//
-// function Alert(string, waitFor) {
-//     window.clearTimeout(interval);
-//     window.clearTimeout(interval);
-//             window.clearInterval(interval);
-//     Draw();
-//     context.beginPath();
-//     context.fillStyle = "blue";
-//     context.fillRect(0,120,canvas.width,240);
-//     context.fillStyle = "white";
-//     context.font = "bold 64px Arial";
-//     context.fillText(string, 10, 300, canvas.width - 20);
-//     // let alertInterval = window.setInterval(drawAlert,100,string)
-//     // window.clearTimeout(alertInterval);
-//     // window.clearInterval(alertInterval);
-//     // window.setTimeout(restart,waitFor);
-//     let starTimeCount = new Date();
-//     let currTime = new Date();
-//     while (currTime - starTimeCount < waitFor) {
-//         drawAlert(string);
-//         currTime = new Date();
-//     }
-// }
 
 function Caught() {
     pacman.lives--;
