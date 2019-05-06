@@ -35,6 +35,10 @@ function startGame() {
     start();
 }
 
+function  pauseMusic() {
+    backgroundMusic.pause();
+}
+
 /**
  * Regular Game start
  */
@@ -98,10 +102,10 @@ function start() {
         }
         keysDown = {};
         addEventListener("keydown", function (e) {
-            keysDown[e.code] = true;
+            keysDown[e.which] = true;
         }, false);
         addEventListener("keyup", function (e) {
-            keysDown[e.code] = false;
+            keysDown[e.which] = false;
         }, false);
     }
 }
@@ -178,22 +182,22 @@ function findRandomEmptyCell(board) {
  * @return {number}
  */
 function GetKeyPressed() {
-    if (keysDown['ArrowUp']) {
+    if (keysDown[keyUp]) {
         direction = 1.5;
         return 3;
         // return 3;
     }
-    if (keysDown['ArrowDown']) {
+    if (keysDown[keyDown]) {
         direction = 0.5;
         return 1;
         // return 4;
     }
-    if (keysDown['ArrowLeft']) {
+    if (keysDown[keyLeft]) {
         direction = 1;
         return 2;
         // return 1;
     }
-    if (keysDown['ArrowRight']) {
+    if (keysDown[keyRight]) {
         direction = 0;
         return 0;
         // return 2;
@@ -554,14 +558,15 @@ function Caught() {
 
         restart();
     } else {
-        //     todo - endgame;
-        // while (window.interval !== undefined && window.interval !== 'undefined')
-        window.clearTimeout(interval);
-        window.clearInterval(interval);
-        GameOn = false;
-        window.alert("You Lost");
-        backgroundMusic.pause();
-        display_settings_menu();
+        if (checkIfInGame()) {
+            // while (window.interval !== undefined && window.interval !== 'undefined')
+            window.clearTimeout(interval);
+            window.clearInterval(interval);
+            GameOn = false;
+            window.alert("You Lost");
+            backgroundMusic.pause();
+            display_settings_menu();
+        }
     }
 }
 
@@ -569,14 +574,14 @@ function Caught() {
  * @return {boolean}
  */
 function TimeAboutToStop(time_elpased) {
-    return (time_elpased >= num_time - extraTimeDelta || num_time - extraTimeDelta <= 0) && extraTimeDelta>0;
+    return (time_elpased >= num_time - extraTimeDelta || num_time - extraTimeDelta <= 0) && extraTimeDelta > 0;
 }
 
 function ExtraTime() {
     if (timeClock.on === 0) {
         let timx = parseInt(Math.random() * 18) + 2;
         let timy = parseInt(Math.random() * 15) + 2;
-        while (board[timx][timy] !== 0 || (Math.abs(timx-pacman.i)+Math.abs(timy-pacman.j)<3)) {
+        while (board[timx][timy] !== 0 || (Math.abs(timx - pacman.i) + Math.abs(timy - pacman.j) < 3) || (Math.abs(timx - binky.i) + Math.abs(timy - binky.j) < 3) || (Math.abs(timx - pinky.i) + Math.abs(timy - pinky.j) < 3) || (Math.abs(timx - inky.i) + Math.abs(timy - inky.j) < 3)) {
             timx = parseInt(Math.random() * 18) + 2;
             timy = parseInt(Math.random() * 15) + 2;
         }
@@ -593,6 +598,13 @@ function addExtraTime() {
     num_time += 10;
     timeClock.on = 0;
     Draw();
+}
+
+function checkIfInGame() {
+    if (document.getElementById("game").style.display === "none") {
+        return false;
+    }
+    return true;
 }
 
 function UpdatePosition() {
@@ -669,14 +681,16 @@ function UpdatePosition() {
         if (time_elapsed >= num_time) {
             window.clearTimeout(interval);
             window.clearInterval(interval);
-            if (score >= 150) {
-                window.alert("We Have a Winner!");
-                GameOn = false;
-                display_settings_menu();
-            } else {
-                GameOn = false;
-                window.alert("You Can Do Better..");
-                display_settings_menu();
+            if (checkIfInGame()) {
+                if (score >= 150) {
+                    window.alert("We Have a Winner!");
+                    GameOn = false;
+                    display_settings_menu();
+                } else {
+                    GameOn = false;
+                    window.alert("You Can Do Better..");
+                    display_settings_menu();
+                }
             }
         }
         if (score >= 200 && time_elapsed <= 10) {
@@ -687,26 +701,30 @@ function UpdatePosition() {
         } else if (board[pacman.i][pacman.j] === 7 || board[pacman.i][pacman.j] === 8 || board[pacman.i][pacman.j] === 9) {
             Caught();
         }
-        if (score === score2win) {
-            Draw();
-            window.clearTimeout(interval);
-            window.clearInterval(interval);
-            GameOn = false;const winNotification = window.createNotification({
-                theme: 'success',
-                closeOnClick: true,
-                onclick: false,
-                positionClass: 'nfc-top-right',
-                displayCloseButton: true,
-                showDuration: 4000
+        if (checkIfInGame()) {
+            if (score === score2win) {
+                Draw();
+                window.clearTimeout(interval);
+                window.clearInterval(interval);
+                GameOn = false;
+                const winNotification = window.createNotification({
+                    theme: 'success',
+                    closeOnClick: true,
+                    onclick: false,
+                    positionClass: 'nfc-top-right',
+                    displayCloseButton: true,
+                    showDuration: 4000
 
-            });
-            winNotification({
-                title: 'Winner!',
-                message: 'LOOK AT YOU!!'
-            });
-            window.alert("Game completed");
-        } else {
-            Draw();
+                });
+                winNotification({
+                    title: 'Winner!',
+                    message: 'LOOK AT YOU!!'
+                });
+                window.alert("Game completed");
+
+            } else {
+                Draw();
+            }
         }
     }
 }

@@ -179,10 +179,27 @@ function getRandomColor() {
     return color;
 }
 
+function checkParameters() {
+    if (num_balls < 50) {
+        num_balls = 50;
+    } else if (num_balls > 90) {
+        num_balls = 90;
+    }
+    if (num_time < 60) {
+        num_time = 60;
+    }
+    if (num_monster > 3) {
+        num_monster = 3;
+    } else if (num_monster < 1) {
+        num_monster = 1;
+    }
+}
+
 function checkBeforeStart() {
     if (keyRight !== keyLeft && keyRight !== keyUp && keyRight !== keyDown && keyLeft !== keyUp && keyLeft !== keyDown
         && keyUp !== keyDown && keyUp !== 32 && keyDown !== 32 && keyLeft !== 32 && keyRight !== 32 &&
         keyUp !== 13 && keyDown !== 13 && keyLeft !== 13 && keyRight !== 13) {
+        checkParameters();
         startGame();
     } else {
         alert('Keyboard setup must contain different keys and do not use ENTER or SPACE-BAR');

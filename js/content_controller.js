@@ -11,6 +11,8 @@ function closeAllDisplay() {
     register.style.display = "none";
     login.style.display = "none";
     game.style.display = "none";
+
+    pauseMusic();
 }
 
 /**
